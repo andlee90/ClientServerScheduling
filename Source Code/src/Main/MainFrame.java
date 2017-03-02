@@ -39,14 +39,21 @@ public class MainFrame extends JFrame
         createServerButton = new JButton("Create New Server");
         listener = new CreateServerListener();
         createServerButton.addActionListener(listener);
+        createServerButton.setEnabled(false);
 
         joinServerButton = new JButton("Join Server");
         listener = new JoinServerListener();
         joinServerButton.addActionListener(listener);
+        joinServerButton.setEnabled(false);
     }
 
     private void createPanel()
     {
+        final int rows = 4;
+        final int cols = 2;
+        final JLabel emptyLabel = new JLabel("");
+        emptyLabel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
+
         JPanel container = new JPanel();
         JPanel serverFieldPanel = new JPanel();
         JPanel serverButtonPanel = new JPanel();
@@ -64,21 +71,24 @@ public class MainFrame extends JFrame
         clientHostFieldPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         clientHostFieldPanel.add(new JLabel("Host: "));
         clientHostFieldPanel.add(hostField);
+        clientHostFieldPanel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
 
         clientPortFieldPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         clientPortFieldPanel.add(new JLabel("Port: "));
         clientPortFieldPanel.add(cPortField);
+        clientPortFieldPanel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
 
         clientButtonPanel.setLayout(new FlowLayout());
         clientButtonPanel.add(joinServerButton);
+        clientButtonPanel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
 
-        container.setLayout(new GridLayout(4, 2));
+        container.setLayout(new GridLayout(rows, cols));
         container.add(new JLabel(""));
         container.add(clientHostFieldPanel);
         container.add(serverFieldPanel);
         container.add(clientPortFieldPanel);
         container.add(new JLabel(""));
-        container.add(new JLabel(""));
+        container.add(emptyLabel);
         container.add(serverButtonPanel);
         container.add(clientButtonPanel);
 

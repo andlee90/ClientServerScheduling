@@ -1,6 +1,6 @@
 package Main;
 
-//import Server.Server;
+import Server.Server;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -109,14 +109,9 @@ class MainFrame extends JFrame
         public void actionPerformed(ActionEvent event)
         {
             portNumber = sPortField.getText();
-            System.out.println(portNumber);
-            //Server server = new Server();
-
-            //try {
-            //    server.configure();
-            //} catch (IOException e) {
-            //    e.printStackTrace();
-            //}
+            Server server = new Server(portNumber);
+            setVisible(false);
+            server.configure();
         }
     }
 

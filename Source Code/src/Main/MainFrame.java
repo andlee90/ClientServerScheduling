@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  * Created by andrewsmith on 2/4/17.
  */
 
-public class MainFrame extends JFrame
+class MainFrame extends JFrame
 {
     private JButton createServerButton;
     private JButton joinServerButton;
@@ -19,11 +19,14 @@ public class MainFrame extends JFrame
     private JTextField sPortField;
     private JTextField hostField;
 
+    private String portNumber;
+    private String hostName;
+
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 200;
 
 
-    public MainFrame()
+    MainFrame()
     {
         createButtons();
         createTextFields();
@@ -34,23 +37,22 @@ public class MainFrame extends JFrame
 
     private void createButtons()
     {
-        ActionListener listener;
-
         createServerButton = new JButton("Create New Server");
-        listener = new CreateServerListener();
-        createServerButton.addActionListener(listener);
-        createServerButton.setEnabled(false);
+        ActionListener clientListener = new CreateServerListener();
+        createServerButton.addActionListener(clientListener);
+        createServerButton.setEnabled(true);
 
         joinServerButton = new JButton("Join Server");
-        listener = new JoinServerListener();
-        joinServerButton.addActionListener(listener);
-        joinServerButton.setEnabled(false);
+        ActionListener serverListener = new JoinServerListener();
+        joinServerButton.addActionListener(serverListener);
+        joinServerButton.setEnabled(true);
     }
 
     private void createPanel()
     {
         final int rows = 4;
         final int cols = 2;
+
         final JLabel emptyLabel = new JLabel("");
         emptyLabel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
 
@@ -106,6 +108,8 @@ public class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
+            portNumber = sPortField.getText();
+            System.out.println(portNumber);
             //Server server = new Server();
 
             //try {
@@ -120,7 +124,9 @@ public class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-
+            portNumber = cPortField.getText();
+            hostName = hostField.getText();
+            System.out.println(hostName + ":" + portNumber);
 
         }
     }

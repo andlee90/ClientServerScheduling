@@ -22,6 +22,7 @@ class ServerManager implements Runnable
     @Override
     public void run()
     {
+        ServerDB.createNewDatabase("test.db");
         System.out.println(portNumber);
 
         try (

@@ -108,10 +108,9 @@ class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            portNumber = sPortField.getText();
-            Server server = new Server(portNumber);
-            setVisible(false);
-            server.configure();
+            setVisible(false); // Hide Main GUI
+            portNumber = sPortField.getText(); // Get string from text field
+            Server server = new Server(portNumber); // Create a new server
         }
     }
 
@@ -121,7 +120,7 @@ class MainFrame extends JFrame
         {
             portNumber = cPortField.getText();
             hostName = hostField.getText();
-            System.out.println(hostName + ":" + portNumber);
+            //System.out.println(hostName + ":" + portNumber);
 
         }
     }

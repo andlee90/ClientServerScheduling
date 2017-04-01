@@ -5,11 +5,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Created by andrewsmith on 3/29/17.
+ * Handles all server-related activities.
  */
 public class Server
 {
     private ServerManager serverManager;
+
     private String portNumber;
     private String hostName;
 
@@ -21,20 +22,31 @@ public class Server
         createServer(pn);
     }
 
+    /**
+     * Builds frame for server interface.
+     */
     private void createFrame()
     {
-        JFrame frame = new ServerFrame(serverManager);
-        frame.setTitle("Server@" + hostName + ":" + portNumber);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setResizable(false);
+        JFrame serverFrame = new ServerFrame(serverManager);
+        serverFrame.setTitle("Server@" + hostName + ":" + portNumber);
+        serverFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverFrame.setVisible(true);
+        serverFrame.setResizable(false);
     }
 
+    /**
+     * Starts a new ServerManager on a background thread.
+     * @param pn the port number to host the server on.
+     */
     private void createServer(String pn)
     {
-        (new Thread(new ServerManager(pn))).start();
+        serverManager = new ServerManager(pn);
+        (new Thread(serverManager)).start();
     }
 
+    /**
+     * Gets the network name of the host machine.
+     */
     private String getHost()
     {
         String hostname = "Unknown";

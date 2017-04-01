@@ -2,12 +2,11 @@ package Server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.io.PrintStream;
 
 /**
- * Created by andrewsmith on 2/4/17.
+ * Handles creation and management of all user interface objects.
  */
-
 class ServerFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 750;
@@ -15,9 +14,7 @@ class ServerFrame extends JFrame
 
     private JButton modifySchedulesButton;
     private JButton closeServerButton;
-
     private JScrollPane scrollPane;
-    private JLabel textAreaLabel;
 
     private ServerManager serverManager;
 
@@ -27,19 +24,18 @@ class ServerFrame extends JFrame
 
         createButtons();
         createTextArea();
-        createPanel();
+        createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
-    private void createPanel()
+    private void createPanels()
     {
         JPanel container = new JPanel();
         JPanel textAreaPanel = new JPanel();
         JPanel buttonPanel = new JPanel();
 
-        textAreaPanel.setLayout(new BoxLayout(textAreaPanel, BoxLayout.PAGE_AXIS));
-        textAreaPanel.add(textAreaLabel);
+        textAreaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         textAreaPanel.add(scrollPane);
 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
@@ -58,7 +54,8 @@ class ServerFrame extends JFrame
         JTextArea textArea = new JTextArea(20, 40);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
-        textAreaLabel = new JLabel("Info:");
+        PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
+        System.setOut(printStream);
     }
 
     private void createButtons()

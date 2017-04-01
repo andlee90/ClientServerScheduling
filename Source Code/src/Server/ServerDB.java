@@ -6,22 +6,28 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Created by andrewsmith on 3/31/17.
+ * Manages all database transactions.
  */
-public class ServerDB
+class ServerDB
 {
-    public static void createNewDatabase(String fileName)
+    /**
+     * Opens schedules.db or creates a new database named schedules.db
+     */
+    static void createDB()
     {
-        String url = "jdbc:sqlite:sqlite/db/" + fileName;
+        String url = "jdbc:sqlite:sqlite/db/schedules.db";
 
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
+        try (Connection conn = DriverManager.getConnection(url))
+        {
+            if (conn != null)
+            {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
-                System.out.println("A new database, " + fileName + ", has been created.");
+                System.out.println("The db driver is " + meta.getDriverName());
+                System.out.println("Connected to the " + "schedules.db" + " database");
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e.getMessage());
         }
     }

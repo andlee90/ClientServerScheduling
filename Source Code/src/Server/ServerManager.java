@@ -8,8 +8,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Created by andrewsmith on 3/29/17.
+ * Manages all network and database related activities on a background
+ * thread to avoid interfering with the user interface.
  */
+
 class ServerManager implements Runnable
 {
     private int portNumber;
@@ -22,8 +24,7 @@ class ServerManager implements Runnable
     @Override
     public void run()
     {
-        ServerDB.createNewDatabase("test.db");
-        System.out.println(portNumber);
+        ServerDB.createDB();
 
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
@@ -44,6 +45,5 @@ class ServerManager implements Runnable
                     + portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
         }
-
     }
 }

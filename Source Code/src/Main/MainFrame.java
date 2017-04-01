@@ -7,9 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by andrewsmith on 2/4/17.
+ * Handles creation and management of all main user interface objects.
  */
-
 class MainFrame extends JFrame
 {
     private JButton createServerButton;
@@ -104,24 +103,28 @@ class MainFrame extends JFrame
         hostField = new JTextField(10);
     }
 
+    /**
+     * Creates a new Sever object and hides the main user interface.
+     */
     class CreateServerListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
             setVisible(false); // Hide Main GUI
             portNumber = sPortField.getText(); // Get string from text field
-            Server server = new Server(portNumber); // Create a new server
+            new Server(portNumber); // Create a new server
         }
     }
 
+    /**
+     * Creates a new Client object and hides the main user interface.
+     */
     class JoinServerListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
             portNumber = cPortField.getText();
             hostName = hostField.getText();
-            //System.out.println(hostName + ":" + portNumber);
-
         }
     }
 }

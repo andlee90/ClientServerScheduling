@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.PrintStream;
 
 /**
- * Handles creation and management of all user interface objects.
+ * Handles creation and management of all server user interface objects.
  */
 class ServerFrame extends JFrame
 {

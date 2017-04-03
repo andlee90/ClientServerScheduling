@@ -82,7 +82,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            //System.out.println(Thread.activeCount());
+            new ServerScheduleEditor();
         }
     }
 

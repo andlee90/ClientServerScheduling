@@ -25,6 +25,8 @@ class ServerManager implements Runnable
     public void run()
     {
         ServerDB.createDB();
+        //ServerDB.connect();
+        System.out.println("Waiting for clients...");
 
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
@@ -32,7 +34,7 @@ class ServerManager implements Runnable
                 PrintWriter out =
                         new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()));
+                        new InputStreamReader(clientSocket.getInputStream()))
         ) {
             String inputLine;
             while ((inputLine = in.readLine()) != null)

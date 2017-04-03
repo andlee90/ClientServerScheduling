@@ -10,16 +10,18 @@ import java.net.UnknownHostException;
 public class Server
 {
     private ServerManager serverManager;
+    private JFrame parentFrame;
 
     private String portNumber;
     private String hostName;
 
-    public Server(String pn)
+    public Server(String pn, JFrame pf)
     {
+        this.parentFrame = pf;
         this.portNumber = pn;
         this.hostName = getHost();
-        createFrame();
         createServer(pn);
+        createFrame();
     }
 
     /**
@@ -27,7 +29,7 @@ public class Server
      */
     private void createFrame()
     {
-        JFrame serverFrame = new ServerFrame(serverManager);
+        JFrame serverFrame = new ServerFrame(serverManager, parentFrame);
         serverFrame.setTitle("Server@" + hostName + ":" + portNumber);
         serverFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         serverFrame.setVisible(true);
@@ -40,8 +42,8 @@ public class Server
      */
     private void createServer(String pn)
     {
-        serverManager = new ServerManager(pn);
-        (new Thread(serverManager)).start();
+        Thread serverThread = new Thread(serverManager = new ServerManager(pn));
+        serverThread.start();
     }
 
     /**

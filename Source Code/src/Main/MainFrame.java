@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
  */
 class MainFrame extends JFrame
 {
+    private JFrame frame = this;
+
     private JButton createServerButton;
     private JButton joinServerButton;
 
@@ -112,7 +114,7 @@ class MainFrame extends JFrame
         {
             setVisible(false); // Hide Main GUI
             portNumber = sPortField.getText(); // Get string from text field
-            new Server(portNumber); // Create a new server
+            new Server(portNumber, frame); // Create a new server
         }
     }
 

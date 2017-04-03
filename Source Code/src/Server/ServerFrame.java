@@ -2,6 +2,8 @@ package Server;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.PrintStream;
 
 /**
@@ -9,18 +11,20 @@ import java.io.PrintStream;
  */
 class ServerFrame extends JFrame
 {
-    private static final int FRAME_WIDTH = 750;
+    private static final int FRAME_WIDTH = 725;
     private static final int FRAME_HEIGHT = 375;
 
-    private JButton modifySchedulesButton;
+    private JButton editSchedulesButton;
     private JButton closeServerButton;
     private JScrollPane scrollPane;
+    private JFrame parentFrame;
 
     private ServerManager serverManager;
 
-    ServerFrame(ServerManager sm)
+    ServerFrame(ServerManager sm, JFrame p)
     {
         this.serverManager = sm;
+        this.parentFrame = p;
 
         createButtons();
         createTextArea();
@@ -39,7 +43,7 @@ class ServerFrame extends JFrame
         textAreaPanel.add(scrollPane);
 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
-        buttonPanel.add(modifySchedulesButton);
+        buttonPanel.add(editSchedulesButton);
         buttonPanel.add(closeServerButton);
 
         container.setLayout(new FlowLayout());
@@ -60,10 +64,37 @@ class ServerFrame extends JFrame
 
     private void createButtons()
     {
-        modifySchedulesButton = new JButton("Modify Schedules");
-        modifySchedulesButton.setEnabled(true);
+        editSchedulesButton = new JButton("Modify Schedules");
+        editSchedulesButton.setEnabled(true);
+        EditSchedulesListener editSchedulesListener = new EditSchedulesListener();
+        editSchedulesButton.addActionListener(editSchedulesListener);
 
         closeServerButton = new JButton("Close Server");
         closeServerButton.setEnabled(true);
+        CloseServerListener closeServerListener = new CloseServerListener();
+        closeServerButton.addActionListener(closeServerListener);
+    }
+
+    /**
+     * Creates a new Scheduler object.
+     */
+    class EditSchedulesListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            //System.out.println(Thread.activeCount());
+        }
+    }
+
+    /**
+     * Creates a new Sever object and hides the main user interface.
+     */
+    class CloseServerListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            setVisible(false); // Hide Server GUI
+            parentFrame.setVisible(true); // Show Main GUI
+        }
     }
 }

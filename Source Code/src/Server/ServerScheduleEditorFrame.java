@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by andrewsmith on 4/2/17.
@@ -41,9 +42,12 @@ public class ServerScheduleEditorFrame extends JFrame
     private void createComboBox()
     {
         String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+        ArrayList<String> usernameList = ServerDB.selectAllUsers();
+        String[] usernameArr = new String[usernameList.size()];
+        usernameArr = usernameList.toArray(usernameArr);
 
-        userList = new JComboBox(petStrings);
-        userList.setSelectedIndex(4);
+        userList = new JComboBox(usernameArr);
+        userList.setSelectedIndex(0);
         userList.addActionListener(new ComboBoxListener());
     }
 

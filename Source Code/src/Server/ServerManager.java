@@ -25,7 +25,7 @@ class ServerManager implements Runnable
     public void run()
     {
         ServerDB.createDB();
-        //ServerDB.connect();
+        //ServerDB.insertUser("timzeh", "12345", "Kelly", "Tim");
         System.out.println("Waiting for clients...");
 
         try (

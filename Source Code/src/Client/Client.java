@@ -7,6 +7,7 @@ import javax.swing.*;
  */
 public class Client
 {
+    private ClientManager clientManager;
     private JFrame parentFrame;
 
     private String portNumber;
@@ -18,5 +19,20 @@ public class Client
         this.parentFrame = pf;
         this.portNumber = pn;
         this.hostName = hn;
+        createClient(pn,hn);
+        createFrame();
+    }
+    private void createFrame()
+    {
+        JFrame clientFrame = new ClientFrame(clientManager, parentFrame);
+        clientFrame.setTitle("Client@" + hostName + ":" + portNumber);
+        clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        clientFrame.setVisible(true);
+        clientFrame.setResizable(false);
+    }
+    private void createClient(String pn, String hn)
+    {
+        Thread clientThread = new Thread(clientManager = new ClientManager(pn,hn));
+        clientThread.start();
     }
 }

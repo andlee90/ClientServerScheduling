@@ -1,18 +1,15 @@
 package Client;
 
-import Client.ClientFrame;
-import Client.ClientManager;
-
+/**
+ Che Is Bae
+ */
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintStream;
 
-/**
- * Created by Tim on 4/2/2017.
- */
+
 public class ClientFrame extends JFrame
 {
     private JTextField tempField;
@@ -66,8 +63,6 @@ public class ClientFrame extends JFrame
         JTextArea textArea = new JTextArea(20, 40);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
-       // PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
-       // System.setOut(printStream);
     }
     private void createTextTemp()
     {
@@ -84,12 +79,8 @@ public class ClientFrame extends JFrame
         ClientFrame.CloseClientListener closeClientListener = new ClientFrame.CloseClientListener();
         closeClientButton.addActionListener(closeClientListener);
 
-
     }
 
-    /**
-     * Creates a new Scheduler object.
-     */
     class EditSchedulesListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -98,9 +89,7 @@ public class ClientFrame extends JFrame
         }
     }
 
-    /**
-     * Creates a new Sever object and hides the main user interface.
-     */
+
     class CloseClientListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)

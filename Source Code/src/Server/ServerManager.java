@@ -39,7 +39,7 @@ class ServerManager implements Runnable
             String inputLine;
             while ((inputLine = in.readLine()) != null)
             {
-                out.println(inputLine);
+                System.out.println(inputLine);
             }
         } catch (IOException e)
         {

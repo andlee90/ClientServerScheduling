@@ -21,6 +21,7 @@ public class Client
         this.hostName = hn;
         createClient(pn,hn);
         createFrame();
+
     }
     private void createFrame()
     {

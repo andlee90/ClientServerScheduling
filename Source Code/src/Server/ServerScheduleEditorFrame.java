@@ -70,10 +70,6 @@ class ServerScheduleEditorFrame extends JFrame
         textArea = new JTextArea(20, 40);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
-
-        // Direct all output to textarea
-        PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
-        System.setOut(printStream);
     }
 
     /**
@@ -89,9 +85,10 @@ class ServerScheduleEditorFrame extends JFrame
                 int userId = ServerDB.selectUserIdByUsername(selected_text);
                 ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
 
+                textArea.setText("");
                 for (int id:scheduleIds)
                 {
-                    System.out.println(ServerDB.selectScheduleByScheduleId(id));
+                    textArea.append(ServerDB.selectScheduleByScheduleId(id) + "\n");
                 }
             }
         }

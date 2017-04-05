@@ -25,26 +25,24 @@ class ServerManager implements Runnable
     public void run()
     {
         ServerDB.createDB();
-        //ServerDB.insertUser("timzeh", "12345", "Kelly", "Tim");
         System.out.println("Waiting for clients...");
-
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
                 Socket clientSocket = serverSocket.accept();
-                PrintWriter out =
-                        new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()))
-        ) {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null)
-            {
-                System.out.println(inputLine);
-            }
-        } catch (IOException e)
+                BufferedReader in = new BufferedReader( new InputStreamReader(clientSocket.getInputStream()))
+        )
         {
-            System.out.println("Exception caught when trying to listen on port "
-                    + portNumber + " or listening for a connection");
+            while (true)
+            {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    System.out.println(inputLine);
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
         }
     }

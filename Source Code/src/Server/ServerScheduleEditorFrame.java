@@ -4,22 +4,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 /**
- * Created by andrewsmith on 4/2/17.
+ * Handles creation and management of all schedule editor user interface objects.
  */
-public class ServerScheduleEditorFrame extends JFrame
+class ServerScheduleEditorFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 725;
     private static final int FRAME_HEIGHT = 375;
 
-    private JComboBox userList;
+    private JComboBox userListBox;
+    private JScrollPane scrollPane;
+    private JTextArea textArea;
 
     ServerScheduleEditorFrame()
     {
         createButtons();
         createComboBox();
+        createTextArea();
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -29,26 +33,31 @@ public class ServerScheduleEditorFrame extends JFrame
     {
         JPanel container = new JPanel();
         JPanel userSelectPanel = new JPanel();
+        JPanel textAreaPanel = new JPanel();
 
-        userSelectPanel.setLayout(new FlowLayout());
-        userSelectPanel.add(userList);
+        userSelectPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        userSelectPanel.add(userListBox);
+
+        textAreaPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        textAreaPanel.add(scrollPane);
 
         container.setLayout(new FlowLayout());
         container.add(userSelectPanel);
+        container.add(textAreaPanel);
 
         this.add(container);
     }
 
     private void createComboBox()
     {
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-        ArrayList<String> usernameList = ServerDB.selectAllUsers();
+        ArrayList<String> usernameList = ServerDB.selectAllUsernames();
+        usernameList.add(0, "Select User");
         String[] usernameArr = new String[usernameList.size()];
         usernameArr = usernameList.toArray(usernameArr);
 
-        userList = new JComboBox(usernameArr);
-        userList.setSelectedIndex(0);
-        userList.addActionListener(new ComboBoxListener());
+        userListBox = new JComboBox(usernameArr);
+        userListBox.setSelectedIndex(0);
+        userListBox.addActionListener(new ComboBoxListener());
     }
 
     private void createButtons()
@@ -56,15 +65,35 @@ public class ServerScheduleEditorFrame extends JFrame
 
     }
 
+    private void createTextArea()
+    {
+        textArea = new JTextArea(20, 40);
+        textArea.setEditable(false);
+        scrollPane = new JScrollPane(textArea);
+
+        // Direct all output to textarea
+        PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
+        System.setOut(printStream);
+    }
+
     /**
-     * Creates a new Sever object and hides the main user interface.
+     * Listener for the user combo box. Selecting a user prints that user's schedule to the frame's text area
      */
     class ComboBoxListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
-            //setVisible(false); // Hide Server GUI
-            //parentFrame.setVisible(true); // Show Main GUI
+            String selected_text = String.valueOf(userListBox.getItemAt(userListBox.getSelectedIndex()));
+            if (!selected_text.equals("Select User"))
+            {
+                int userId = ServerDB.selectUserIdByUsername(selected_text);
+                ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
+
+                for (int id:scheduleIds)
+                {
+                    System.out.println(ServerDB.selectScheduleByScheduleId(id));
+                }
+            }
         }
     }
 

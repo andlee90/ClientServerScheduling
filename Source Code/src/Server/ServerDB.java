@@ -11,7 +11,7 @@ class ServerDB
     private static String dbUrl = "jdbc:sqlite:sqlite/db/client_scheduler.db";
 
     /**
-     * Creates a new database named client_scheduler.db.
+     * Creates a new database named client_scheduler.db if one does not already exist.
      */
     static void createDB()
     {
@@ -31,6 +31,9 @@ class ServerDB
         }
     }
 
+    /**
+     * Creates a users table if one does not already exist.
+     */
     private static void createUsersTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS users (\n"
@@ -52,6 +55,9 @@ class ServerDB
         }
     }
 
+    /**
+     * Creates a schedules table if one does not already exist.
+     */
     private static void createSchedulesTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS schedules (\n"
@@ -71,6 +77,9 @@ class ServerDB
         }
     }
 
+    /**
+     * Creates a users-schedules linker table if one does not already exist.
+     */
     private static void createUserSchedTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS user_schedules (\n"
@@ -80,8 +89,6 @@ class ServerDB
                 + "FOREIGN KEY(user_id) REFERENCES users(user_id),\n"
                 + "FOREIGN KEY(schedule_id) REFERENCES schedules(schedule_id)\n"
                 + ");";
-
-
 
         try (Connection conn = DriverManager.getConnection(dbUrl);
              Statement stmt = conn.createStatement())
@@ -94,6 +101,9 @@ class ServerDB
         }
     }
 
+    /**
+     * Creates a connection to client_scheduler.db.
+     */
     private static Connection connect()
     {
         Connection conn = null;
@@ -109,12 +119,12 @@ class ServerDB
     }
 
     /**
-     * Insert a new row into the warehouses table
+     * Insert a new row into the users table
      *
-     * @param user
-     * @param pass
-     * @param ln
-     * @param fn
+     * @param user username of the user to be inserted.
+     * @param pass password of the user to be inserted.
+     * @param ln last name of the user to be inserted.
+     * @param fn first name of the user to be inserted.
      */
     public static void insertUser(String user, String pass, String ln, String fn)
     {
@@ -135,7 +145,97 @@ class ServerDB
         }
     }
 
-    public static ArrayList<String> selectAllUsers()
+    /**
+     * Returns a schedule from the schedules table with the corresponding id.
+     *
+     * @param schedId the id of the schedule to select
+     */
+    static String selectScheduleByScheduleId(int schedId)
+    {
+        String sql = "SELECT schedule_day, schedule_time FROM schedules WHERE schedule_id = ?";
+        String schedule = "";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,schedId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                schedule = rs.getString("schedule_day")
+                        + " " + rs.getString("schedule_time");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return schedule;
+    }
+
+    /**
+     * Returns an arraylist of all schedule ids from the user_schedules table for the corresponding user id.
+     *
+     * @param userId the id of the user to select
+     */
+    static ArrayList<Integer> selectAllScheduleIdsByUserId(int userId)
+    {
+        String sql = "SELECT schedule_id FROM user_schedules WHERE user_id = ?";
+        ArrayList<Integer> scheduleIds = new ArrayList<>();
+
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,userId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                scheduleIds.add(rs.getInt("schedule_id"));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return scheduleIds;
+    }
+
+    /**
+     * Returns an user id for the corresponding username from the users table.
+     *
+     * @param username the username of the user to select.
+     */
+    static int selectUserIdByUsername(String username)
+    {
+        String sql = "SELECT user_id FROM users WHERE user_username = ?";
+        int userId = 1;
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setString(1,username);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                userId = rs.getInt("user_id");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return userId;
+    }
+
+    /**
+     * Returns an arraylist of all usernames from the users table.
+     */
+    static ArrayList<String> selectAllUsernames()
     {
         String sql = "SELECT user_username FROM users";
         ArrayList<String> usernames = new ArrayList<>();
@@ -146,7 +246,6 @@ class ServerDB
         {
             while (rs.next())
             {
-                //System.out.println(rs.getString("user_username"));
                 usernames.add(rs.getString("user_username"));
             }
         }
@@ -158,14 +257,44 @@ class ServerDB
         return usernames;
     }
 
-    public void delete(int id)
+    /**
+     * Returns an arraylist of all user ids from the users table.
+     */
+    public static ArrayList<Integer> selectAllUserIds()
     {
-        String sql = "DELETE FROM warehouses WHERE id = ?";
+        String sql = "SELECT user_id FROM users";
+        ArrayList<Integer> userIds = new ArrayList<>();
 
-        try (Connection conn = this.connect();
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                userIds.add(rs.getInt("user_id"));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return userIds;
+    }
+
+    /**
+     * Removes user with corresponding id from users table.
+     *
+     * @param userId the id of the user to be deleted.
+     */
+    public void delete(int userId)
+    {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
         {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, userId);
             pstmt.executeUpdate();
 
         }

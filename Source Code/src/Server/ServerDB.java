@@ -3,6 +3,7 @@ package Server;
 import java.sql.*;
 import java.util.ArrayList;
 
+//TODO: Add auto-builders for necessary rows
 /**
  * Manages all database transactions.
  */
@@ -146,6 +147,29 @@ class ServerDB
     }
 
     /**
+     * Insert a new row into the users table
+     *
+     * @param user_id user id of the user schedule to be inserted.
+     * @param schedule_id schedule id of the user schedule to be inserted.
+     */
+    public static void insertUserSchedule(int user_id, int schedule_id)
+    {
+        String sql = "INSERT INTO user_schedules(user_id,schedule_id) VALUES(?,?)";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, schedule_id);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
      * Returns a schedule from the schedules table with the corresponding id.
      *
      * @param schedId the id of the schedule to select
@@ -165,6 +189,64 @@ class ServerDB
             {
                 schedule = rs.getString("schedule_day")
                         + " " + rs.getString("schedule_time");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return schedule;
+    }
+
+    /**
+     * Returns a day from the schedules table with the corresponding id.
+     *
+     * @param schedId the id of the schedule to select
+     */
+    static String selectDayByScheduleId(int schedId)
+    {
+        String sql = "SELECT schedule_day FROM schedules WHERE schedule_id = ?";
+        String schedule = "";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,schedId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                schedule = rs.getString("schedule_day");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return schedule;
+    }
+
+    /**
+     * Returns a time from the schedules table with the corresponding id.
+     *
+     * @param schedId the id of the schedule to select
+     */
+    static String selectTimeByScheduleId(int schedId)
+    {
+        String sql = "SELECT schedule_time FROM schedules WHERE schedule_id = ?";
+        String schedule = "";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,schedId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                schedule = rs.getString("schedule_time");
             }
         }
         catch (SQLException e)
@@ -233,6 +315,37 @@ class ServerDB
     }
 
     /**
+     * Returns a schedule id for the corresponding day and time from the users table.
+     *
+     * @param day the day of the schedule to select.
+     * @param time the time of the schedule to select.
+     */
+    static int selectScheduleIdByDayAndTime(String day, String time)
+    {
+        String sql = "SELECT schedule_id FROM schedules WHERE schedule_day = ? AND schedule_time = ?";
+        int scheduleId = 1;
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setString(1,day);
+            pstmt.setString(2,time);
+            ResultSet rs    = pstmt.executeQuery();
+
+            while (rs.next())
+            {
+                scheduleId = rs.getInt("schedule_id");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return scheduleId;
+    }
+
+
+    /**
      * Returns an arraylist of all usernames from the users table.
      */
     static ArrayList<String> selectAllUsernames()
@@ -255,6 +368,56 @@ class ServerDB
         }
 
         return usernames;
+    }
+
+    /**
+     * Returns an arraylist of all distinct days from the schedules table.
+     */
+    static ArrayList<String> selectAllDays()
+    {
+        String sql = "SELECT DISTINCT schedule_day FROM schedules";
+        ArrayList<String> days = new ArrayList<>();
+
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                days.add(rs.getString("schedule_day"));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return days;
+    }
+
+    /**
+     * Returns an arraylist of all distinct times from the schedules table.
+     */
+    static ArrayList<String> selectAllTimes()
+    {
+        String sql = "SELECT DISTINCT schedule_time FROM schedules";
+        ArrayList<String> times = new ArrayList<>();
+
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                times.add(rs.getString("schedule_time"));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return times;
     }
 
     /**
@@ -297,6 +460,29 @@ class ServerDB
             pstmt.setInt(1, userId);
             pstmt.executeUpdate();
 
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Delete an existing row from the user schedules table
+     *
+     * @param user_id user id of the user schedule to be deleted.
+     * @param schedule_id schedule id of the user schedule to be deleted.
+     */
+    public static void deleteUserSchedule(int user_id, int schedule_id)
+    {
+        String sql = "DELETE FROM user_schedules WHERE user_id = ? AND schedule_id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, schedule_id);
+            pstmt.executeUpdate();
         }
         catch (SQLException e)
         {

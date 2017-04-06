@@ -1,7 +1,5 @@
 package Server;
 
-import com.sun.xml.internal.bind.v2.TODO;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +15,6 @@ class ServerScheduleEditorFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 600;
     private static final int FRAME_HEIGHT = 250;
-    //private static final int FRAME_HEIGHT = 700;
 
     private JComboBox usernameListBox;
     private JComboBox addDayListBox;

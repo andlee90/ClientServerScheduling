@@ -12,7 +12,8 @@ class ServerDB
     private static String dbUrl = "jdbc:sqlite:sqlite/db/client_scheduler.db";
 
     /**
-     * Creates a new database named client_scheduler.db if one does not already exist.
+     * Creates a new database named client_scheduler.db if one does not already exist. Creates
+     * necessary tables and adds default values if database is being created for the first time.
      */
     static void createDB()
     {
@@ -20,10 +21,34 @@ class ServerDB
         {
             if (conn != null)
             {
-                System.out.println("Connected to client_scheduler.db");
-                createUsersTable();
-                createSchedulesTable();
-                createUserSchedTable();
+                DatabaseMetaData dbm = conn.getMetaData();
+                ResultSet tables = dbm.getTables(null, null, "Users", null);
+                if (tables.next())
+                {
+                    System.out.println("Connected to client_scheduler.db");
+                }
+                else
+                {
+                    System.out.println("Created client_scheduler.db");
+
+                    createUsersTable();
+                    System.out.println("Users table created");
+
+                    createSchedulesTable();
+                    System.out.println("Schedules table created");
+
+                    createUserSchedTable();
+                    System.out.println("User schedules table created");
+
+                    insertSchedules();
+                    System.out.println("Default schedules added");
+
+                    insertUser("andlee", "12345", "Smith", "Andrew");
+                    System.out.println("User andlee added");
+
+                    insertUser("timzeh", "12345", "Kelly", "Tim");
+                    System.out.println("User timzeh added");
+                }
             }
 
         } catch (SQLException e)
@@ -38,7 +63,7 @@ class ServerDB
     private static void createUsersTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS users (\n"
-                + "user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
+                + "user_id INTEGER NOT NULL PRIMARY KEY,\n"
                 + "user_username TEXT NOT NULL UNIQUE,\n"
                 + "user_password TEXT NOT NULL,\n"
                 + "user_last_name TEXT NOT NULL,\n"
@@ -62,7 +87,7 @@ class ServerDB
     private static void createSchedulesTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS schedules (\n"
-                + "schedule_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
+                + "schedule_id INTEGER NOT NULL PRIMARY KEY,\n"
                 + "schedule_day TEXT NOT NULL,\n"
                 + "schedule_time TEXT NOT NULL\n"
                 + ");";
@@ -84,7 +109,7 @@ class ServerDB
     private static void createUserSchedTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS user_schedules (\n"
-                + "user_schedule_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
+                + "user_schedule_id INTEGER NOT NULL PRIMARY KEY,\n"
                 + "user_id INTEGER NOT NULL,\n"
                 + "schedule_id INTEGER NOT NULL,\n"
                 + "FOREIGN KEY(user_id) REFERENCES users(user_id),\n"
@@ -120,6 +145,34 @@ class ServerDB
     }
 
     /**
+     * Auto-insert all needed schedules into the schedules table
+     */
+    public static void insertSchedules()
+    {
+        String sql = "INSERT INTO schedules(schedule_day, schedule_time) VALUES(?,?)";
+        String[] daysArray = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+        String[] timesArray = {"9am - 10am", "10am - 11am", "11am - 12pm", "1pm - 2pm", "2pm - 3pm"};
+
+        for (String day:daysArray)
+        {
+            for (String time:timesArray)
+            {
+                try (Connection conn = connect();
+                     PreparedStatement pstmt = conn.prepareStatement(sql))
+                {
+                    pstmt.setString(1, day);
+                    pstmt.setString(2, time);
+                    pstmt.executeUpdate();
+                }
+                catch (SQLException e)
+                {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+    }
+
+    /**
      * Insert a new row into the users table
      *
      * @param user username of the user to be inserted.
@@ -147,7 +200,7 @@ class ServerDB
     }
 
     /**
-     * Insert a new row into the users table
+     * Insert a new row into the user schedules table
      *
      * @param user_id user id of the user schedule to be inserted.
      * @param schedule_id schedule id of the user schedule to be inserted.

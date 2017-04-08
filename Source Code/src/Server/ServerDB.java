@@ -3,7 +3,6 @@ package Server;
 import java.sql.*;
 import java.util.ArrayList;
 
-//TODO: Add auto-builders for necessary rows
 /**
  * Manages all database transactions.
  */
@@ -43,11 +42,8 @@ class ServerDB
                     insertSchedules();
                     System.out.println("Default schedules added");
 
-                    insertUser("andlee", "12345", "Smith", "Andrew");
-                    System.out.println("User andlee added");
-
-                    insertUser("timzeh", "12345", "Kelly", "Tim");
-                    System.out.println("User timzeh added");
+                    insertUser("admin", "password", "istrator", "Admin");
+                    System.out.println("Default user admin added");
                 }
             }
 
@@ -368,6 +364,83 @@ class ServerDB
     }
 
     /**
+     * Returns an user id for the corresponding username and password from the users table.
+     *
+     * @param username the username of the user to select.
+     * @param password the password of the user to select.
+     */
+    static int selectUserIdByUsernameAndPassword(String username, String password)
+    {
+        String sql = "SELECT user_id FROM users WHERE user_username = ? AND user_password = ?";
+        int userId = 0;
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setString(1,username);
+            pstmt.setString(2,password);
+            ResultSet rs    = pstmt.executeQuery();
+
+            userId = rs.getInt("user_id");
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return userId;
+    }
+
+    /**
+     * Returns an first name for the corresponding user id from the users table.
+     *
+     * @param userId the user id of the user to select.
+     */
+    static String selectFirstNameByUserId(int userId)
+    {
+        String sql = "SELECT user_first_name FROM users WHERE user_id = ?";
+        String fn = "";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,userId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            fn = rs.getString("user_first_name");
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return fn;
+    }
+
+    /**
+     * Returns an last name for the corresponding user id from the users table.
+     *
+     * @param userId the user id of the user to select.
+     */
+    static String selectLastNameByUserId(int userId)
+    {
+        String sql = "SELECT user_last_name FROM users WHERE user_id = ?";
+        String ln = "";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,userId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            ln = rs.getString("user_last_name");
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return ln;
+    }
+
+    /**
      * Returns a schedule id for the corresponding day and time from the users table.
      *
      * @param day the day of the schedule to select.
@@ -396,7 +469,6 @@ class ServerDB
 
         return scheduleId;
     }
-
 
     /**
      * Returns an arraylist of all usernames from the users table.

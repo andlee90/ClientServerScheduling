@@ -76,7 +76,7 @@ class ServerFrame extends JFrame
     }
 
     /**
-     * Creates a new Scheduler object.
+     * Creates a new schedule editor object.
      */
     class EditSchedulesListener implements ActionListener
     {
@@ -87,8 +87,9 @@ class ServerFrame extends JFrame
     }
 
     /**
-     * Creates a new Sever object and hides the main user interface.
+     * Hides the current frame and shows the main user interface.
      */
+    //TODO: Actually close down server
     class CloseServerListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)

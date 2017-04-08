@@ -3,7 +3,8 @@ import java.io.*;
 import java.net.*;
 
 /**
- * Created by Tim on 4/2/2017.
+ * Manages all client-related network activities on a background
+ * thread to avoid interfering with the user interface.
  */
 class ClientManager implements Runnable
 {
@@ -18,13 +19,13 @@ class ClientManager implements Runnable
 
     public void run()
     {
-        try (
-                Socket echoSocket = new Socket(hostName, portNumber);
-                PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
-                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
-        )
+        try
         {
-            String userInput="Client "+Inet4Address.getLocalHost().getHostAddress()+" connected.";
+            Socket echoSocket = new Socket(hostName, portNumber);
+            PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+            //BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+
+            String userInput = "Client " + Inet4Address.getLocalHost().getHostAddress() + " connected.";
             out.println(userInput);
             echoSocket.close();
         }
@@ -40,5 +41,4 @@ class ClientManager implements Runnable
             System.exit(1);
         }
     }
-
 }

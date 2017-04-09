@@ -1,7 +1,7 @@
 package Main;
 
 import Server.Server;
-import Client.ClientAuthenticationFrame;
+import Client.Client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -129,7 +129,7 @@ class MainFrame extends JFrame
             setVisible(false); // Hide Main GUI
             portNumber = cPortField.getText();
             hostName = hostField.getText();
-            new ClientAuthenticationFrame(portNumber,hostName, frame);
+            new Client(portNumber, hostName, frame);
         }
     }
 }

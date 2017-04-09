@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handles creation and management of all client authentication user interface objects.
  */
-public class ClientAuthenticationFrame extends JFrame
+class ClientAuthenticationFrame extends JFrame
 {
     private JLabel userNameLabel;
     private JLabel passwordLabel;
@@ -17,19 +17,19 @@ public class ClientAuthenticationFrame extends JFrame
     private JTextField userField;
     private JPasswordField passwordField;
     private JFrame parentFrame;
-    private JFrame frame;
+    private ClientManager clientManager;
 
     private String hostName;
     private String portNumber;
+    private DataUser user;
 
-    public ClientAuthenticationFrame(String pn, String hn, JFrame pf)
+    ClientAuthenticationFrame(String pn, String hn, JFrame pf)
     {
         super("User Authentication");
         setSize(300,200);
         setLocation(500,280);
 
         parentFrame = pf;
-        frame = this;
         this.hostName = hn;
         this.portNumber = pn;
 
@@ -97,11 +97,10 @@ public class ClientAuthenticationFrame extends JFrame
         {
             String puname = userField.getText();
             String ppaswd = passwordField.getText();
-            DataUser user = new DataUser(puname, ppaswd, null, null, null);
+            user = new DataUser(puname, ppaswd, null, null, null);
 
-            ClientAuthenticator ca;
-            Thread authenticationThread = new Thread(ca = new ClientAuthenticator(portNumber, hostName, user));
-            authenticationThread.start();
+            Thread clientThread = new Thread(clientManager = new ClientManager(portNumber, hostName, user));
+            clientThread.start();
 
             //TODO: This is sloppy. Find a beter way.
             try
@@ -113,22 +112,33 @@ public class ClientAuthenticationFrame extends JFrame
                 e.printStackTrace();
             }
 
-            authenticationThread.interrupt();
-            user = ca.getUser();
+            user = clientManager.getUser();
 
             if (user.getValidity())
             {
                 setVisible(false);
-                new Client(portNumber, hostName, frame, user);
+                createFrame();
             }
 
             else
             {
-                JOptionPane.showMessageDialog(null,"Wrong Password / Username");
+                JOptionPane.showMessageDialog(null,"Incorrect Username or Password");
                 userField.setText("");
                 passwordField.setText("");
                 userField.requestFocus();
             }
         });
+    }
+
+    /**
+     * Builds frame for client interface.
+     */
+    private void createFrame()
+    {
+        JFrame clientFrame = new ClientFrame(clientManager, parentFrame, user);
+        clientFrame.setTitle("Client@" + hostName + ":" + portNumber);
+        clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        clientFrame.setVisible(true);
+        clientFrame.setResizable(false);
     }
 }

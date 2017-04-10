@@ -17,13 +17,13 @@ import java.util.ArrayList;
  */
 public class ServerThread extends Thread
 {
-    private int SeverThreadId;
+    private int threadId;
     private Socket socket;
 
     ServerThread(Socket p, int id)
     {
         this.socket = p;
-        this.SeverThreadId = id;
+        this.threadId = id;
         start();
     }
 
@@ -68,7 +68,7 @@ public class ServerThread extends Thread
             if (user.getValidity())
             {
                 DataMessage message = (DataMessage)serverInputStream.readObject();
-                System.out.println(message.getMessage());
+                System.out.println("Client#" + (threadId + 1) + " : " + message.getMessage());
             }
         }
         catch (IOException e)

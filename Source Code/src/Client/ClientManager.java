@@ -38,7 +38,7 @@ class ClientManager implements Runnable
             oos.writeObject(user);
             user = (DataUser) ois.readObject();
 
-            String userInput = "Client " + Inet4Address.getLocalHost().getHostAddress() + " connected.";
+            String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress() + " connected.";
             DataMessage message = new DataMessage(userInput);
             oos.writeObject(message);
         }

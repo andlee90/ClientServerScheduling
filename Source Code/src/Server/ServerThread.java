@@ -1,5 +1,6 @@
 package Server;
 
+import DataModels.DataCommand;
 import DataModels.DataMessage;
 import DataModels.DataUser;
 
@@ -19,6 +20,7 @@ public class ServerThread extends Thread
 {
     private int threadId;
     private Socket socket;
+    private String userAddress;
 
     ServerThread(Socket p, int id)
     {
@@ -68,8 +70,23 @@ public class ServerThread extends Thread
             if (user.getValidity())
             {
                 DataMessage message = (DataMessage)serverInputStream.readObject();
-                System.out.println("Client#" + (threadId + 1) + " : " + message.getMessage());
+                userAddress = message.getMessage();
+                System.out.println(userAddress + " connected");
+
+                while(true)
+                {
+                    DataCommand command = (DataCommand) serverInputStream.readObject();
+                    if (command.getCommand() == DataCommand.Command.CLOSE_SERVER)
+                    {
+                        System.out.println(userAddress + " disconnected");
+                        break;
+                    }
+                }
             }
+
+            serverInputStream.close();
+            serverOutputStream.close();
+            close();
         }
         catch (IOException e)
         {
@@ -80,5 +97,10 @@ public class ServerThread extends Thread
         {
             e.printStackTrace();
         }
+    }
+
+    public void close() throws IOException
+    {
+        this.socket.close();
     }
 }

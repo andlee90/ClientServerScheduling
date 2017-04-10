@@ -1,4 +1,5 @@
 package Client;
+import DataModels.DataCommand;
 import DataModels.DataMessage;
 import DataModels.DataUser;
 
@@ -38,9 +39,11 @@ class ClientManager implements Runnable
             oos.writeObject(user);
             user = (DataUser) ois.readObject();
 
-            String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress() + " connected.";
+            String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress();
             DataMessage message = new DataMessage(userInput);
             oos.writeObject(message);
+            //DataCommand command = new DataCommand(DataCommand.Command.CLOSE_SERVER);
+            //oos.writeObject(command);
         }
         catch (UnknownHostException e)
         {

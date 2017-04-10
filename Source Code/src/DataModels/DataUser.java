@@ -13,7 +13,8 @@ public class DataUser implements Serializable
     private String firstName;
     private String lastName;
     private ArrayList<String> schedule;
-    boolean isValid;
+    private boolean isViewed;
+    private boolean isValid;
 
     public DataUser(String un, String p, String fn, String ln, ArrayList<String> s)
     {
@@ -22,6 +23,7 @@ public class DataUser implements Serializable
         this.firstName = fn;
         this.lastName = ln;
         this.schedule = s;
+        this.isViewed = false;
         this.isValid = false;
     }
 
@@ -48,6 +50,11 @@ public class DataUser implements Serializable
     public ArrayList<String> getSchedule()
     {
         return this.schedule;
+    }
+
+    public boolean getViewed()
+    {
+        return this.isViewed;
     }
 
     public boolean getValidity()
@@ -78,6 +85,11 @@ public class DataUser implements Serializable
     public void setSchedule(ArrayList<String> s)
     {
         this.schedule = s;
+    }
+
+    public void setViewed(boolean v)
+    {
+        this.isViewed = v;
     }
 
     public void setValidity(boolean v)

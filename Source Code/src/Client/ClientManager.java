@@ -13,7 +13,7 @@ import java.net.*;
  * for authentication. If authentication succeeds, a connection
  * message is sent.
  */
-class ClientManager implements Runnable
+class ClientManager extends Thread
 {
     private int portNumber;
     private String hostName;
@@ -24,6 +24,7 @@ class ClientManager implements Runnable
         this.portNumber = Integer.parseInt(pn);
         this.hostName = hn;
         this.user = u;
+        start();
     }
 
     @Override

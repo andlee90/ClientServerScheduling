@@ -38,6 +38,7 @@ public class ServerThread extends Thread
             ObjectOutputStream serverOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
             DataUser user = (DataUser)serverInputStream.readObject();
+            user.setViewed(true);
             int userId = 0;
 
             try

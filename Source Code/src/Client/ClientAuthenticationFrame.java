@@ -99,20 +99,20 @@ class ClientAuthenticationFrame extends JFrame
             String ppaswd = passwordField.getText();
             user = new DataUser(puname, ppaswd, null, null, null);
 
-            Thread clientThread = new Thread(clientManager = new ClientManager(portNumber, hostName, user));
-            clientThread.start();
+            clientManager = new ClientManager(portNumber, hostName, user);
 
-            //TODO: This is sloppy. Find a beter way.
-            try
+            while(!user.getViewed())
             {
-                TimeUnit.SECONDS.sleep(2);
+                try
+                {
+                    TimeUnit.MILLISECONDS.sleep(1);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                user = clientManager.getUser();
             }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-
-            user = clientManager.getUser();
 
             if (user.getValidity())
             {

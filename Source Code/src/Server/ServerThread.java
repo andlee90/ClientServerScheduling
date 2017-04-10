@@ -15,13 +15,16 @@ import java.util.ArrayList;
  * closed if authentication fails. Otherwise, communication with the
  * client continues.
  */
-public class ServerThread implements Runnable
+public class ServerThread extends Thread
 {
+    private int SeverThreadId;
     private Socket socket;
 
-    ServerThread(Socket p)
+    ServerThread(Socket p, int id)
     {
         this.socket = p;
+        this.SeverThreadId = id;
+        start();
     }
 
     @Override
@@ -33,7 +36,17 @@ public class ServerThread implements Runnable
             ObjectOutputStream serverOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
             DataUser user = (DataUser)serverInputStream.readObject();
-            int userId = ServerDB.selectUserIdByUsernameAndPassword(user.getUserName(), user.getPassword());
+            int userId = 0;
+
+            try
+            {
+                userId = ServerDB.selectUserIdByUsernameAndPassword(user.getUserName(), user.getPassword());
+            }
+            catch(Exception e)
+            {
+                System.out.println("Invalid login attempt from " + socket.getRemoteSocketAddress()
+                        + "\nwith username: " + user.getUserName() + " and password: " + user.getPassword());
+            }
 
             if(userId != 0)
             {
@@ -56,10 +69,6 @@ public class ServerThread implements Runnable
             {
                 DataMessage message = (DataMessage)serverInputStream.readObject();
                 System.out.println(message.getMessage());
-            }
-            else
-            {
-                socket.close();
             }
         }
         catch (IOException e)

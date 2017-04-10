@@ -1,6 +1,9 @@
 package Server;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import javax.swing.*;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -14,13 +17,15 @@ public class Server
 
     private String portNumber;
     private String hostName;
+    private String maxClients;
 
-    public Server(String pn, JFrame pf)
+    public Server(String pn, String mc, JFrame pf) throws IOException
     {
         this.parentFrame = pf;
         this.portNumber = pn;
+        this.maxClients = mc;
         this.hostName = getHost();
-        createServer(pn);
+        createServer();
         createFrame();
     }
 
@@ -38,12 +43,10 @@ public class Server
 
     /**
      * Starts a new ServerManager on a background thread.
-     * @param pn the port number to host the server on.
      */
-    private void createServer(String pn)
+    private void createServer() throws IOException
     {
-        Thread serverThread = new Thread(serverManager = new ServerManager(pn));
-        serverThread.start();
+        serverManager = new ServerManager(portNumber, maxClients);
     }
 
     /**

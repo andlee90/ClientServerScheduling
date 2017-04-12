@@ -9,7 +9,7 @@ public class DataCommand implements Serializable
 {
     public enum Command
     {
-        CLOSE_SERVER, INSERT_SCHEDLE, DELETE_SCHEDULE
+        DEFAULT, CLOSE_SERVER, INSERT_SCHEDLE, DELETE_SCHEDULE
     }
 
     private Command command;
@@ -24,8 +24,8 @@ public class DataCommand implements Serializable
         return command;
     }
 
-    public void setCommand(Command m)
+    public void setCommand(Command c)
     {
-        this.command = m;
+        this.command = c;
     }
 }

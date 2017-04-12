@@ -1,4 +1,5 @@
 package Client;
+
 import DataModels.DataCommand;
 import DataModels.DataMessage;
 import DataModels.DataUser;
@@ -34,17 +35,24 @@ class ClientManager extends Thread
         {
             Socket socket = new Socket(hostName, portNumber);
 
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream clientOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream clientInputStream = new ObjectInputStream(socket.getInputStream());
 
-            oos.writeObject(user);
-            user = (DataUser) ois.readObject();
+            clientOutputStream.writeObject(user);
+            user = (DataUser) clientInputStream.readObject();
 
             String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress();
             DataMessage message = new DataMessage(userInput);
-            oos.writeObject(message);
-            //DataCommand command = new DataCommand(DataCommand.Command.CLOSE_SERVER);
-            //oos.writeObject(command);
+            clientOutputStream.writeObject(message);
+
+            while(true)
+            {
+                if(Client.command.getCommand() == DataCommand.Command.CLOSE_SERVER)
+                {
+                    clientOutputStream.writeObject(Client.command);
+                    Client.command.setCommand(DataCommand.Command.DEFAULT);
+                }
+            }
         }
         catch (UnknownHostException e)
         {
@@ -65,6 +73,17 @@ class ClientManager extends Thread
 
     DataUser getUser()
     {
-        return user;
+        return this.user;
     }
+
+    /*public DataCommand.Command getCommand()
+    {
+        return command;
+    }
+
+    public void setCommand(DataCommand.Command c)
+    {
+        System.out.println("inside set command");
+        command = c;
+    }*/
 }

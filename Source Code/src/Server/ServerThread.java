@@ -85,9 +85,9 @@ public class ServerThread extends Thread
                 }
             }
 
-            serverInputStream.close();
-            serverOutputStream.close();
-            close();
+            //serverInputStream.close();
+            //serverOutputStream.close();
+            //close();
         }
         catch (IOException e)
         {

@@ -99,7 +99,7 @@ class ClientAuthenticationFrame extends JFrame
             String ppaswd = passwordField.getText();
             user = new DataUser(puname, ppaswd, null, null, null);
 
-            clientManager = new ClientManager(portNumber, hostName, user);
+            this.clientManager = new ClientManager(portNumber, hostName, user);
 
             while(!user.getViewed())
             {
@@ -135,7 +135,7 @@ class ClientAuthenticationFrame extends JFrame
      */
     private void createFrame()
     {
-        JFrame clientFrame = new ClientFrame(clientManager, parentFrame, user);
+        JFrame clientFrame = new ClientFrame(this.clientManager, parentFrame, user);
         clientFrame.setTitle("Client@" + hostName + ":" + portNumber);
         clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         clientFrame.setVisible(true);

@@ -1,5 +1,6 @@
 package Client;
 
+import DataModels.DataCommand;
 import DataModels.DataUser;
 
 import javax.swing.*;
@@ -167,8 +168,9 @@ class ClientFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
-            parentFrame.setVisible(true); // Show Main GUI
+            Client.command.setCommand(DataCommand.Command.CLOSE_SERVER);
+            setVisible(false);
+            parentFrame.setVisible(true);
         }
     }
 }

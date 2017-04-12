@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- *  Custom OutputStream to write output to a textArea object.
- */
 public class SeverOutputStream extends OutputStream
 {
     private JTextArea textArea;

@@ -7,25 +7,50 @@ import java.io.Serializable;
  */
 public class DataCommand implements Serializable
 {
-    public enum Command
+    public enum CommandType
     {
-        DEFAULT, CLOSE_SERVER, INSERT_SCHEDLE, DELETE_SCHEDULE
+        DEFAULT, CLOSE_SERVER, INSERT_SCHEDULE, DELETE_SCHEDULE
     }
 
-    private Command command;
+    private CommandType commandType;
+    private String schedule;
+    private boolean isValid;
 
-    public DataCommand(Command c)
+
+    public DataCommand(CommandType ct, String s)
     {
-        this.command = c;
+        this.commandType = ct;
+        this.schedule = s;
+        this.isValid = false;
     }
 
-    public Command getCommand()
+    public CommandType getCommandType()
     {
-        return command;
+        return commandType;
     }
 
-    public void setCommand(Command c)
+    public String getSchedule()
     {
-        this.command = c;
+        return schedule;
+    }
+
+    public boolean getValidity()
+    {
+        return isValid;
+    }
+
+    public void setCommandType(CommandType c)
+    {
+        this.commandType = c;
+    }
+
+    public void setSchedule(String s)
+    {
+        this.schedule = s;
+    }
+
+    public void setValidity(boolean v)
+    {
+        this.isValid = v;
     }
 }

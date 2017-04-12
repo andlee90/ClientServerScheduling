@@ -168,7 +168,7 @@ class ClientFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            Client.command.setCommand(DataCommand.Command.CLOSE_SERVER);
+            Client.command.setCommandType(DataCommand.CommandType.CLOSE_SERVER);
             setVisible(false);
             parentFrame.setVisible(true);
         }

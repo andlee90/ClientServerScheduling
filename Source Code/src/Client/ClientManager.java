@@ -47,10 +47,17 @@ class ClientManager extends Thread
 
             while(true)
             {
-                if(Client.command.getCommand() == DataCommand.Command.CLOSE_SERVER)
+                switch (Client.command.getCommandType())
                 {
-                    clientOutputStream.writeObject(Client.command);
-                    Client.command.setCommand(DataCommand.Command.DEFAULT);
+                    case DEFAULT:
+
+                    case INSERT_SCHEDULE:
+
+                    case DELETE_SCHEDULE:
+
+                    case CLOSE_SERVER:
+                        clientOutputStream.writeObject(Client.command);
+                        Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
                 }
             }
         }
@@ -75,15 +82,4 @@ class ClientManager extends Thread
     {
         return this.user;
     }
-
-    /*public DataCommand.Command getCommand()
-    {
-        return command;
-    }
-
-    public void setCommand(DataCommand.Command c)
-    {
-        System.out.println("inside set command");
-        command = c;
-    }*/
 }

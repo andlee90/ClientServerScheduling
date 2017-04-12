@@ -13,7 +13,7 @@ public class Client
     private String portNumber;
     private String hostName;
 
-    public volatile static DataCommand command = new DataCommand(DataCommand.Command.DEFAULT);
+    volatile static DataCommand command = new DataCommand(DataCommand.CommandType.DEFAULT, null);
 
     public Client(String pn, String hn, JFrame pf)
     {

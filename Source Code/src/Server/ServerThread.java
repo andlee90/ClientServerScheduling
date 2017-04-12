@@ -76,11 +76,40 @@ public class ServerThread extends Thread
 
                 while(true)
                 {
+                    String schedule;
+                    int scheduleId;
+
                     DataCommand command = (DataCommand) serverInputStream.readObject();
-                    if (command.getCommand() == DataCommand.Command.CLOSE_SERVER)
+
+                    switch (command.getCommandType())
                     {
-                        System.out.println(userAddress + " disconnected");
-                        break;
+                        case DEFAULT:
+
+                        case INSERT_SCHEDULE:
+                            schedule = command.getSchedule();
+                            scheduleId = ServerDB.selectScheduleIdByDayAndTime(
+                                    (schedule.substring(0,schedule.indexOf(" "))),
+                                    (schedule.substring(schedule.indexOf(" "),schedule.length()-1)));
+
+                            ServerDB.insertUserSchedule(userId, scheduleId);
+                            command.setValidity(true);
+                            serverOutputStream.writeObject(command);
+                            System.out.println(userAddress + " added " + schedule + " to their schedule");
+
+                        case DELETE_SCHEDULE:
+                            schedule = command.getSchedule();
+                            scheduleId = ServerDB.selectScheduleIdByDayAndTime(
+                                    (schedule.substring(0,schedule.indexOf(" "))),
+                                    (schedule.substring(schedule.indexOf(" "),schedule.length()-1)));
+
+                            ServerDB.deleteUserSchedule(userId, scheduleId);
+                            command.setValidity(true);
+                            serverOutputStream.writeObject(command);
+                            System.out.println(userAddress + " removed " + schedule + " from their schedule");
+
+                        case CLOSE_SERVER:
+                            System.out.println(userAddress + " disconnected");
+                            break;
                     }
                 }
             }

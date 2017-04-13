@@ -65,7 +65,6 @@ class ServerUserEditorFrame extends JFrame
         usernameArr = usernameList.toArray(usernameArr);
         removeUserListBox = new JComboBox(usernameArr);
         removeUserListBox.setSelectedIndex(0);
-        removeUserListBox.addActionListener(new RemoveUserListBoxListener());
     }
 
     private void createTextArea()
@@ -116,17 +115,6 @@ class ServerUserEditorFrame extends JFrame
     }
 
     /**
-     * Listener for the username combo box. Selecting a username allows for deletion.
-     */
-    class RemoveUserListBoxListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent event)
-        {
-
-        }
-    }
-
-    /**
      * Listener for the add user button. Adds the selected user to the user's table.
      */
     class AddUserButtonListener implements ActionListener
@@ -145,7 +133,13 @@ class ServerUserEditorFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-
+            String selectedUser = String.valueOf(removeUserListBox.getItemAt(removeUserListBox.getSelectedIndex()));
+            if(!selectedUser.equals("Select User"))
+            {
+                int selectedUserId = ServerDB.selectUserIdByUsername(selectedUser);
+                ServerDB.deleteUser(selectedUserId);
+                updateTextAreaAndComboBox();
+            }
         }
     }
 

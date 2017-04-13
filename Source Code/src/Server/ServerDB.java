@@ -575,9 +575,9 @@ class ServerDB
      *
      * @param userId the id of the user to be deleted.
      */
-    public void delete(int userId)
+    public static void deleteUser(int userId)
     {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM users WHERE user_id = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))

@@ -69,7 +69,7 @@ class ServerFrame extends JFrame
         EditSchedulesListener editSchedulesListener = new EditSchedulesListener();
         editSchedulesButton.addActionListener(editSchedulesListener);
 
-        editUsersButton = new JButton("Modify Users");
+        editUsersButton = new JButton("Add/Remove Users");
         editUsersButton.setEnabled(true);
         EditUsersListener editUsersListener = new EditUsersListener();
         editUsersButton.addActionListener(editUsersListener);

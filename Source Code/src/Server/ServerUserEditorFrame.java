@@ -1,5 +1,7 @@
 package Server;
 
+import com.sun.tools.javac.comp.Flow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -79,15 +81,28 @@ class ServerUserEditorFrame extends JFrame
         JPanel container = new JPanel();
         JPanel textAreaPanel = new JPanel();
         JPanel componentPanel = new JPanel();
+        JPanel comboboxPanel = new JPanel();
+        JPanel removeUserButtonPanel = new JPanel();
+        JPanel otherButtonPanel = new JPanel();
 
         textAreaPanel.setLayout(new BoxLayout(textAreaPanel, BoxLayout.PAGE_AXIS));
         textAreaPanel.add(scrollPane);
 
-        componentPanel.setLayout(new BoxLayout(componentPanel, BoxLayout.PAGE_AXIS));
-        componentPanel.add(removeUserListBox);
-        componentPanel.add(removeUserButton);
-        componentPanel.add(addUserButton);
-        componentPanel.add(closeButton);
+        comboboxPanel.setLayout(new FlowLayout());
+        comboboxPanel.add(removeUserListBox);
+
+        removeUserButtonPanel.setLayout(new FlowLayout());
+        removeUserButtonPanel.add(removeUserButton);
+
+        otherButtonPanel.setLayout(new FlowLayout());
+        otherButtonPanel.add(addUserButton);
+        otherButtonPanel.add(closeButton);
+
+        componentPanel.setLayout(new GridLayout(4, 1));
+        componentPanel.add(comboboxPanel);
+        componentPanel.add(removeUserButtonPanel);
+        componentPanel.add(new JLabel(""));
+        componentPanel.add(otherButtonPanel);
 
         container.setLayout(new FlowLayout());
         container.add(textAreaPanel);

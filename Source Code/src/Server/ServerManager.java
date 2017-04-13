@@ -30,9 +30,10 @@ class ServerManager extends Thread
         ServerDB.createDB();
         System.out.println("Total connected clients: 0/" + this.MAX_CLIENTS);
 
-        while (true)
+        Socket socket = null;
+
+        while (!interrupted())
         {
-            Socket socket = null;
             try
             {
                 socket = this.serverSocket.accept();
@@ -42,6 +43,21 @@ class ServerManager extends Thread
                 e.printStackTrace();
             }
             assignClientToThread(socket);
+        }
+        try
+        {
+            for(ServerThread st:clientConnections)
+            {
+                st.close();
+                st.interrupt();
+            }
+            // TODO: Address already in use (Bind failed) when restarting server on same port.
+            serverSocket.setReuseAddress(true);
+            serverSocket.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 

@@ -16,6 +16,12 @@ class ServerScheduleEditorFrame extends JFrame
     private static final int FRAME_WIDTH = 600;
     private static final int FRAME_HEIGHT = 250;
 
+    private JFrame parentFrame;
+
+    private JButton addScheduleButton;
+    private JButton removeScheduleButton;
+    private JButton cancelButton;
+
     private JComboBox usernameListBox;
     private JComboBox addDayListBox;
     private JComboBox addTimeListBox;
@@ -25,18 +31,75 @@ class ServerScheduleEditorFrame extends JFrame
     private JScrollPane scrollPane;
     private JTextArea textArea;
 
-    private JButton addScheduleButton;
-    private JButton removeScheduleButton;
-    private JButton cancelButton;
+    private ArrayList<String> currentUserSchedule;
 
-    ServerScheduleEditorFrame()
+    ServerScheduleEditorFrame(JFrame pf)
     {
+        this.parentFrame = pf;
         createButtons();
         createComboBoxes();
         createTextArea();
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+    }
+
+    private void createButtons()
+    {
+        addScheduleButton = new JButton("Add Schedule");
+        ActionListener addScheduleButtonListener = new AddScheduleButtonListener();
+        addScheduleButton.addActionListener(addScheduleButtonListener);
+        addScheduleButton.setEnabled(true);
+
+        removeScheduleButton = new JButton("Remove Schedule");
+        ActionListener removeScheduleButtonListener = new RemoveScheduleButtonListener();
+        removeScheduleButton.addActionListener(removeScheduleButtonListener);
+        removeScheduleButton.setEnabled(true);
+
+        cancelButton = new JButton("Cancel");
+        ActionListener cancelButtonListener = new CancelButtonListener();
+        cancelButton.addActionListener(cancelButtonListener);
+        cancelButton.setEnabled(true);
+    }
+
+    private void createComboBoxes()
+    {
+        String selectionDefault;
+
+        ArrayList<String> usernameList = ServerDB.selectAllUsernames();
+        usernameList.add(0, "Select User");
+        String[] usernameArr = new String[usernameList.size()];
+        usernameArr = usernameList.toArray(usernameArr);
+        usernameListBox = new JComboBox(usernameArr);
+        usernameListBox.setSelectedIndex(0);
+        usernameListBox.addActionListener(new UsernameListBoxListener());
+
+        selectionDefault = "Select Day";
+        addDayListBox = new JComboBox();
+        addDayListBox.addItem(selectionDefault);
+        addDayListBox.setSelectedIndex(0);
+
+        selectionDefault = "Select Time";
+        addTimeListBox = new JComboBox();
+        addTimeListBox.addItem(selectionDefault);
+        addTimeListBox.setSelectedIndex(0);
+
+        selectionDefault = "Select Day";
+        removeDayListBox = new JComboBox();
+        removeDayListBox.addItem(selectionDefault);
+        removeDayListBox.setSelectedIndex(0);
+
+        selectionDefault = "Select Time";
+        removeTimeListBox = new JComboBox();
+        removeTimeListBox.addItem(selectionDefault);
+        removeTimeListBox.setSelectedIndex(0);
+    }
+
+    private void createTextArea()
+    {
+        textArea = new JTextArea(10, 15);
+        textArea.setEditable(false);
+        scrollPane = new JScrollPane(textArea);
     }
 
     private void createPanels()
@@ -78,64 +141,64 @@ class ServerScheduleEditorFrame extends JFrame
         this.add(container);
     }
 
-    private void createComboBoxes()
+    private void updateTextAreaAndComboBoxes(String su)
     {
-        ArrayList<String> usernameList = ServerDB.selectAllUsernames();
-        usernameList.add(0, "Select User");
-        String[] usernameArr = new String[usernameList.size()];
-        usernameArr = usernameList.toArray(usernameArr);
-        usernameListBox = new JComboBox(usernameArr);
-        usernameListBox.setSelectedIndex(0);
-        usernameListBox.addActionListener(new UsernameListBoxListener());
+        currentUserSchedule = new ArrayList<>();
+        int userId = ServerDB.selectUserIdByUsername(su);
+        ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
 
-        ArrayList<String> dayList = ServerDB.selectAllDays();
-        dayList.add(0, "Select Day");
-        String[] dayArr = new String[dayList.size()];
-        dayArr = dayList.toArray(dayArr);
-        addDayListBox = new JComboBox(dayArr);
-        addDayListBox.setSelectedIndex(0);
+        textArea.setText("");
+        for (int id:scheduleIds)
+        {
+            currentUserSchedule.add(ServerDB.selectScheduleByScheduleId(id));
+            textArea.append(ServerDB.selectScheduleByScheduleId(id) + "\n");
+        }
 
-        ArrayList<String> timeList = ServerDB.selectAllTimes();
-        timeList.add(0, "Select Time");
-        String[] timeArr = new String[timeList.size()];
-        timeArr = timeList.toArray(timeArr);
-        addTimeListBox = new JComboBox(timeArr);
-        addTimeListBox.setSelectedIndex(0);
+        // Add all days to add day combo box
+        ArrayList<String> addDayList = ServerDB.selectAllDays();
+        addDayList.add(0, "Select Day");
+        String[] addDayArr = new String[addDayList.size()];
+        addDayList.toArray(addDayArr);
+        DefaultComboBoxModel addDayModel = new DefaultComboBoxModel(addDayArr);
+        addDayListBox.setModel(addDayModel);
+        addDayListBox.updateUI();
 
-        String selectDay = "Select Day";
-        removeDayListBox = new JComboBox();
-        removeDayListBox.addItem(selectDay);
-        removeDayListBox.setSelectedIndex(0);
+        // Add all times to add time combo box
+        ArrayList<String> addTimeList = ServerDB.selectAllTimes();
+        addTimeList.add(0, "Select Time");
+        String[] addTimeArr = new String[addTimeList.size()];
+        addTimeList.toArray(addTimeArr);
+        DefaultComboBoxModel addTimeModel = new DefaultComboBoxModel(addTimeArr);
+        addTimeListBox.setModel(addTimeModel);
+        addTimeListBox.updateUI();
 
-        String selectTime = "Select Time";
-        removeTimeListBox = new JComboBox();
-        removeTimeListBox.addItem(selectTime);
-        removeTimeListBox.setSelectedIndex(0);
-    }
+        // Add only user scheduled days to remove day combo box
+        ArrayList<String> removeDayList = new ArrayList<>();
+        for (int id:scheduleIds)
+        {
+            removeDayList.add(ServerDB.selectDayByScheduleId(id));
+        }
+        removeDayList.add(0, "Select Day");
+        Set<String> removeDaySet = new LinkedHashSet<>(removeDayList);
+        String[] removeDayArr = new String[removeDaySet.size()];
+        removeDayArr = removeDaySet.toArray(removeDayArr);
+        DefaultComboBoxModel dayModel = new DefaultComboBoxModel(removeDayArr);
+        removeDayListBox.setModel( dayModel );
+        removeDayListBox.updateUI();
 
-    private void createButtons()
-    {
-        addScheduleButton = new JButton("Add Schedule");
-        ActionListener addScheduleButtonListener = new AddScheduleButtonListener();
-        addScheduleButton.addActionListener(addScheduleButtonListener);
-        addScheduleButton.setEnabled(true);
-
-        removeScheduleButton = new JButton("Remove Schedule");
-        ActionListener removeScheduleButtonListener = new RemoveScheduleButtonListener();
-        removeScheduleButton.addActionListener(removeScheduleButtonListener);
-        removeScheduleButton.setEnabled(true);
-
-        cancelButton = new JButton("Cancel");
-        ActionListener cancelButtonListener = new CancelButtonListener();
-        cancelButton.addActionListener(cancelButtonListener);
-        cancelButton.setEnabled(true);
-    }
-
-    private void createTextArea()
-    {
-        textArea = new JTextArea(10, 15);
-        textArea.setEditable(false);
-        scrollPane = new JScrollPane(textArea);
+        // Add only user scheduled times to remove time combo box
+        ArrayList<String> removeTimeList = new ArrayList<>();
+        for (int id:scheduleIds)
+        {
+            removeTimeList.add(ServerDB.selectTimeByScheduleId(id));
+        }
+        removeTimeList.add(0, "Select Time");
+        Set<String> removeTimeSet = new LinkedHashSet<>(removeTimeList);
+        String[] removeTimeArr = new String[removeTimeSet.size()];
+        removeTimeArr = removeTimeSet.toArray(removeTimeArr);
+        DefaultComboBoxModel timeModel = new DefaultComboBoxModel(removeTimeArr);
+        removeTimeListBox.setModel( timeModel );
+        removeTimeListBox.updateUI();
     }
 
     /**
@@ -145,43 +208,11 @@ class ServerScheduleEditorFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            String selected_text = String.valueOf(usernameListBox.getItemAt(usernameListBox.getSelectedIndex()));
-            if (!selected_text.equals("Select User"))
+            String selectedUsername = String.valueOf(usernameListBox.getItemAt(usernameListBox.getSelectedIndex()));
+
+            if (!selectedUsername.equals("Select User"))
             {
-                int userId = ServerDB.selectUserIdByUsername(selected_text);
-                ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
-                ArrayList<String> removeDayList = new ArrayList<>();
-
-                for (int id:scheduleIds)
-                {
-                    removeDayList.add(ServerDB.selectDayByScheduleId(id));
-                }
-                removeDayList.add(0, "Select Day");
-                Set<String> removeDaySet = new LinkedHashSet<>(removeDayList);
-                String[] removeDayArr = new String[removeDaySet.size()];
-                removeDayArr = removeDaySet.toArray(removeDayArr);
-                DefaultComboBoxModel dayModel = new DefaultComboBoxModel(removeDayArr);
-                removeDayListBox.setModel( dayModel );
-                removeDayListBox.updateUI();
-
-                ArrayList<String> removeTimeList = new ArrayList<>();
-                for (int id:scheduleIds)
-                {
-                    removeTimeList.add(ServerDB.selectTimeByScheduleId(id));
-                }
-                removeTimeList.add(0, "Select Time");
-                Set<String> removeTimeSet = new LinkedHashSet<>(removeTimeList);
-                String[] removeTimeArr = new String[removeTimeSet.size()];
-                removeTimeArr = removeTimeSet.toArray(removeTimeArr);
-                DefaultComboBoxModel timeModel = new DefaultComboBoxModel(removeTimeArr);
-                removeTimeListBox.setModel( timeModel );
-                removeTimeListBox.updateUI();
-
-                textArea.setText("");
-                for (int id:scheduleIds)
-                {
-                    textArea.append(ServerDB.selectScheduleByScheduleId(id) + "\n");
-                }
+                updateTextAreaAndComboBoxes(selectedUsername);
             }
             else
             {
@@ -193,7 +224,6 @@ class ServerScheduleEditorFrame extends JFrame
     /**
      * Listener for the add schedule button. Adds the selected schedule to the selected user's schedule.
      */
-    //TODO: Don't allow adding duplicates
     class AddScheduleButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -201,6 +231,7 @@ class ServerScheduleEditorFrame extends JFrame
             String selected_user = String.valueOf(usernameListBox.getItemAt(usernameListBox.getSelectedIndex()));
             String selected_day = String.valueOf(addDayListBox.getItemAt(addDayListBox.getSelectedIndex()));
             String selected_time = String.valueOf(addTimeListBox.getItemAt(addTimeListBox.getSelectedIndex()));
+            String schedule = selected_day + " " + selected_time;
 
             if (!selected_user.equals("Select User") &&
                     !selected_day.equals("Select Day") &&
@@ -209,13 +240,18 @@ class ServerScheduleEditorFrame extends JFrame
                 int userId = ServerDB.selectUserIdByUsername(selected_user);
                 int scheduleId = ServerDB.selectScheduleIdByDayAndTime(selected_day, selected_time);
 
-                ServerDB.insertUserSchedule(userId, scheduleId);
-
-                ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
-                textArea.setText("");
-                for (int id:scheduleIds)
+                boolean exists = false;
+                for (String s:currentUserSchedule)
                 {
-                    textArea.append(ServerDB.selectScheduleByScheduleId(id) + "\n");
+                    if (schedule.equals(s))
+                    {
+                        exists = true;
+                    }
+                }
+                if (!exists)
+                {
+                    ServerDB.insertUserSchedule(userId, scheduleId);
+                    updateTextAreaAndComboBoxes(selected_user);
                 }
             }
         }
@@ -224,7 +260,6 @@ class ServerScheduleEditorFrame extends JFrame
     /**
      * Listener for the delete schedule button. Removes the selected schedule from the selected user's schedule.
      */
-    //TODO: Update comboboxes so they don't include deleted options
     class RemoveScheduleButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -241,27 +276,20 @@ class ServerScheduleEditorFrame extends JFrame
                 int scheduleId = ServerDB.selectScheduleIdByDayAndTime(selected_day, selected_time);
 
                 ServerDB.deleteUserSchedule(userId, scheduleId);
-
-                ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
-                textArea.setText("");
-                for (int id:scheduleIds)
-                {
-                    textArea.append(ServerDB.selectScheduleByScheduleId(id) + "\n");
-                }
+                updateTextAreaAndComboBoxes(selected_user);
             }
         }
     }
 
     /**
-     * Listener for the cancel button. Hides the schedule editor GUI
+     * Listener for the cancel button. Destroys the schedule editor GUI and shows the Server GUI.
      */
-
     class CancelButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
-            //TODO: actually destroy frame.
-            setVisible(false); // Hide ScheduleEditor GUI
+            dispose();
+            parentFrame.setVisible(true);
         }
     }
 }

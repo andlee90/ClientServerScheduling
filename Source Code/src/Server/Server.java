@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
  */
 public class Server
 {
-    private ServerManager serverManager;
+    public static ServerManager serverManager;
     private JFrame parentFrame;
 
     private String portNumber;
@@ -34,7 +34,7 @@ public class Server
      */
     private void createFrame()
     {
-        JFrame serverFrame = new ServerFrame(serverManager, parentFrame);
+        JFrame serverFrame = new ServerFrame(parentFrame);
         serverFrame.setTitle("Server@" + hostName + ":" + portNumber);
         serverFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         serverFrame.setVisible(true);

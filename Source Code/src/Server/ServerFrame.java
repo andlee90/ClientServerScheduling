@@ -18,12 +18,10 @@ class ServerFrame extends JFrame
     private JButton closeServerButton;
     private JScrollPane scrollPane;
     private JFrame parentFrame;
+    private JFrame frame = this;
 
-    private ServerManager serverManager;
-
-    ServerFrame(ServerManager sm, JFrame p)
+    ServerFrame(JFrame p)
     {
-        this.serverManager = sm;
         this.parentFrame = p;
 
         createButtons();
@@ -76,25 +74,27 @@ class ServerFrame extends JFrame
     }
 
     /**
-     * Creates a new schedule editor object.
+     * Creates a new schedule editor object and hides current frame.
      */
     class EditSchedulesListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
-            new ServerScheduleEditor();
+            setVisible(false); // Hide Server GUI
+            new ServerScheduleEditor(frame); // Create new schedule editor
         }
     }
 
     /**
-     * Hides the current frame and shows the main user interface.
+     * Destroys the current frame, stops the server and shows the main user interface.
      */
     //TODO: Actually close down server
     class CloseServerListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            Server.serverManager.interrupt(); // Shutdown server
+            dispose(); // Destroy Server GUI
             parentFrame.setVisible(true); // Show Main GUI
         }
     }

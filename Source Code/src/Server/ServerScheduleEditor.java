@@ -7,8 +7,11 @@ import javax.swing.*;
  */
 class ServerScheduleEditor
 {
-    ServerScheduleEditor()
+    private JFrame parentFrame;
+
+    ServerScheduleEditor(JFrame pf)
     {
+        this.parentFrame = pf;
         createFrame();
     }
 
@@ -17,7 +20,7 @@ class ServerScheduleEditor
      */
     private void createFrame()
     {
-        JFrame serverScheduleEditorFrame = new ServerScheduleEditorFrame();
+        JFrame serverScheduleEditorFrame = new ServerScheduleEditorFrame(parentFrame);
         serverScheduleEditorFrame.setTitle("Schedule Editor");
         serverScheduleEditorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         serverScheduleEditorFrame.setVisible(true);

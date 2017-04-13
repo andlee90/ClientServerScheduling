@@ -13,6 +13,11 @@ public class Client
     private String portNumber;
     private String hostName;
 
+    /**
+     * The command object is set by user input (i.e. clicking a button) and determines the details of the command issued
+     * to the waiting server. It is "volatile" to allow it's state to be affected and the changes made to be read by
+     * multiple threads. No actions occur when it's command type is DEFAULT.
+     */
     volatile static DataCommand command = new DataCommand(DataCommand.CommandType.DEFAULT, null);
 
     public Client(String pn, String hn, JFrame pf)

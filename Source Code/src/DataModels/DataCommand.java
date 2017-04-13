@@ -3,7 +3,7 @@ package DataModels;
 import java.io.Serializable;
 
 /**
- * Created by andrewsmith on 4/10/17.
+ * Data model for holding a command to be to passed to the server.
  */
 public class DataCommand implements Serializable
 {
@@ -15,7 +15,6 @@ public class DataCommand implements Serializable
     private CommandType commandType;
     private String schedule;
     private boolean isValid;
-
 
     public DataCommand(CommandType ct, String s)
     {

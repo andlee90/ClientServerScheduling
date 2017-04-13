@@ -6,14 +6,11 @@ import DataModels.DataUser;
 
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Manages all client-related network activities on a background
- * thread to avoid interfering with the user interface. First, a
- * user model is passed to the server with the necessary info
- * for authentication. If authentication succeeds, a connection
- * message is sent.
+ * Manages all client-related network activities on a background thread to avoid interfering with the user interface.
+ * First, a user model is passed to the server with the necessary info for authentication. If authentication succeeds,
+ * a connection message is sent. Afterwards, multiple command models may be sent to perform various tasks.
  */
 class ClientManager extends Thread
 {

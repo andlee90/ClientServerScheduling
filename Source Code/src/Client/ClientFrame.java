@@ -18,10 +18,10 @@ class ClientFrame extends JFrame
     private static final int FRAME_WIDTH = 600;
     private static final int FRAME_HEIGHT = 250;
 
-    private JComboBox addDayListBox;
-    private JComboBox addTimeListBox;
-    private JComboBox removeDayListBox;
-    private JComboBox removeTimeListBox;
+    private JComboBox<String> addDayListBox;
+    private JComboBox<String> addTimeListBox;
+    private JComboBox<String> removeDayListBox;
+    private JComboBox<String> removeTimeListBox;
 
     private JScrollPane scrollPane;
     private JTextArea textArea;
@@ -35,10 +35,10 @@ class ClientFrame extends JFrame
     private ClientManager clientManager;
     private DataUser user;
 
-    ArrayList<String> userDayList= new ArrayList<>();
-    ArrayList<String> userTimeList = new ArrayList<>();
-    ArrayList<String> allDayList= new ArrayList<>();
-    ArrayList<String> allTimeList = new ArrayList<>();
+    private ArrayList<String> userDayList= new ArrayList<>();
+    private ArrayList<String> userTimeList = new ArrayList<>();
+    private ArrayList<String> allDayList= new ArrayList<>();
+    private ArrayList<String> allTimeList = new ArrayList<>();
 
     ClientFrame(ClientManager sm, JFrame p, DataUser u)
     {
@@ -52,7 +52,7 @@ class ClientFrame extends JFrame
         createComboBoxes();
         createTextArea();
         createPanels();
-        refreshData();
+        updateTextArea();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
     }
@@ -70,6 +70,7 @@ class ClientFrame extends JFrame
         allDayList.add("Wednesday");
         allDayList.add("Thursday");
         allDayList.add("Friday");
+
         allTimeList.add("9am - 10am");
         allTimeList.add("10am - 11am");
         allTimeList.add("11am - 12pm");
@@ -88,25 +89,25 @@ class ClientFrame extends JFrame
         allDayList.add(0, "Select Day");
         String[] dayArr = new String[allDayList.size()];
         dayArr = allDayList.toArray(dayArr);
-        addDayListBox = new JComboBox(dayArr);
+        addDayListBox = new JComboBox<>(dayArr);
         addDayListBox.setSelectedIndex(0);
 
         allTimeList.add(0, "Select Time");
         String[] timeArr = new String[allTimeList.size()];
         timeArr = allTimeList.toArray(timeArr);
-        addTimeListBox = new JComboBox(timeArr);
+        addTimeListBox = new JComboBox<>(timeArr);
         addTimeListBox.setSelectedIndex(0);
 
         userDayList.add(0, "Select Day");
         dayArr = new String[userDayList.size()];
         dayArr = userDayList.toArray(dayArr);
-        removeDayListBox = new JComboBox(dayArr);
+        removeDayListBox = new JComboBox<>(dayArr);
         removeDayListBox.setSelectedIndex(0);
 
         userTimeList.add(0, "Select Time");
         timeArr = new String[userTimeList.size()];
         timeArr = userTimeList.toArray(timeArr);
-        removeTimeListBox = new JComboBox(timeArr);
+        removeTimeListBox = new JComboBox<>(timeArr);
         removeTimeListBox.setSelectedIndex(0);
     }
 
@@ -173,7 +174,7 @@ class ClientFrame extends JFrame
         cancelButton.setEnabled(true);
     }
 
-    private void refreshData()
+    private void updateTextArea()
     {
         textArea.setText("");
         Collections.sort(user.getSchedule());
@@ -200,7 +201,7 @@ class ClientFrame extends JFrame
                 Client.command.setSchedule(schedule);
                 Client.command.setCommandType(DataCommand.CommandType.INSERT_SCHEDULE);
                 user.getSchedule().add(schedule);
-                refreshData();
+                updateTextArea();
             }
         }
     }
@@ -222,7 +223,7 @@ class ClientFrame extends JFrame
                 Client.command.setSchedule(schedule);
                 Client.command.setCommandType(DataCommand.CommandType.DELETE_SCHEDULE);
                 user.getSchedule().remove(schedule);
-                refreshData();
+                updateTextArea();
             }
         }
     }

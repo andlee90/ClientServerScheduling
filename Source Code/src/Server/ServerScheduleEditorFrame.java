@@ -203,8 +203,8 @@ class ServerScheduleEditorFrame extends JFrame
             String selected_time = String.valueOf(addTimeListBox.getItemAt(addTimeListBox.getSelectedIndex()));
 
             if (!selected_user.equals("Select User") &&
-                    !selected_day.equals("Select User") &&
-                    !selected_time.equals("Select User"))
+                    !selected_day.equals("Select Day") &&
+                    !selected_time.equals("Select Time"))
             {
                 int userId = ServerDB.selectUserIdByUsername(selected_user);
                 int scheduleId = ServerDB.selectScheduleIdByDayAndTime(selected_day, selected_time);
@@ -234,8 +234,8 @@ class ServerScheduleEditorFrame extends JFrame
             String selected_time = String.valueOf(removeTimeListBox.getItemAt(removeTimeListBox.getSelectedIndex()));
 
             if (!selected_user.equals("Select User") &&
-                    !selected_day.equals("Select User") &&
-                    !selected_time.equals("Select User"))
+                    !selected_day.equals("Select Day") &&
+                    !selected_time.equals("Select Time"))
             {
                 int userId = ServerDB.selectUserIdByUsername(selected_user);
                 int scheduleId = ServerDB.selectScheduleIdByDayAndTime(selected_day, selected_time);

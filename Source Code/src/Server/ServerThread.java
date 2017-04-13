@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -81,35 +82,37 @@ public class ServerThread extends Thread
 
                     DataCommand command = (DataCommand) serverInputStream.readObject();
 
-                    switch (command.getCommandType())
+                    if (command.getCommandType() == DataCommand.CommandType.CLOSE_SERVER)
                     {
-                        case DEFAULT:
+                        System.out.println(userAddress + " disconnected");
+                        break;
+                    }
 
-                        case INSERT_SCHEDULE:
-                            schedule = command.getSchedule();
-                            scheduleId = ServerDB.selectScheduleIdByDayAndTime(
-                                    (schedule.substring(0,schedule.indexOf(" "))),
-                                    (schedule.substring(schedule.indexOf(" "),schedule.length()-1)));
+                    if (command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
+                    {
+                        schedule = command.getSchedule();
+                        scheduleId = ServerDB.selectScheduleIdByDayAndTime(
+                                (schedule.substring(0,schedule.indexOf(" "))),
+                                (schedule.substring(schedule.indexOf(" "),schedule.length())));
 
-                            ServerDB.insertUserSchedule(userId, scheduleId);
-                            command.setValidity(true);
-                            serverOutputStream.writeObject(command);
-                            System.out.println(userAddress + " added " + schedule + " to their schedule");
+                        ServerDB.insertUserSchedule(userId, scheduleId);
+                        command.setValidity(true);
+                        serverOutputStream.writeObject(command);
+                        System.out.println(userAddress + " added " + schedule + " to their schedule");
 
-                        case DELETE_SCHEDULE:
-                            schedule = command.getSchedule();
-                            scheduleId = ServerDB.selectScheduleIdByDayAndTime(
-                                    (schedule.substring(0,schedule.indexOf(" "))),
-                                    (schedule.substring(schedule.indexOf(" "),schedule.length()-1)));
+                    }
 
-                            ServerDB.deleteUserSchedule(userId, scheduleId);
-                            command.setValidity(true);
-                            serverOutputStream.writeObject(command);
-                            System.out.println(userAddress + " removed " + schedule + " from their schedule");
+                    if (command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
+                    {
+                        schedule = command.getSchedule();
+                        scheduleId = ServerDB.selectScheduleIdByDayAndTime(
+                                (schedule.substring(0,schedule.indexOf(" "))),
+                                (schedule.substring(schedule.indexOf(" "),schedule.length())));
 
-                        case CLOSE_SERVER:
-                            System.out.println(userAddress + " disconnected");
-                            break;
+                        ServerDB.deleteUserSchedule(userId, scheduleId);
+                        command.setValidity(true);
+                        serverOutputStream.writeObject(command);
+                        System.out.println(userAddress + " removed " + schedule + " from their schedule");
                     }
                 }
             }

@@ -6,6 +6,7 @@ import DataModels.DataUser;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Manages all client-related network activities on a background
@@ -47,17 +48,62 @@ class ClientManager extends Thread
 
             while(true)
             {
-                switch (Client.command.getCommandType())
+                if(Client.command.getCommandType() == DataCommand.CommandType.CLOSE_SERVER)
                 {
-                    case DEFAULT:
-
-                    case INSERT_SCHEDULE:
-
-                    case DELETE_SCHEDULE:
-
-                    case CLOSE_SERVER:
-                        clientOutputStream.writeObject(Client.command);
-                        Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                    clientOutputStream.writeObject(Client.command);
+                    DataCommand c = (DataCommand) clientInputStream.readObject();
+                    while(!c.getValidity())
+                    {
+                        try
+                        {
+                            TimeUnit.MILLISECONDS.sleep(1);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        c = (DataCommand) clientInputStream.readObject();
+                    }
+                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                    Client.command.setSchedule(null);
+                }
+                if(Client.command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
+                {
+                    clientOutputStream.writeObject(Client.command);
+                    DataCommand c = (DataCommand) clientInputStream.readObject();
+                    while(!c.getValidity())
+                    {
+                        try
+                        {
+                            TimeUnit.MILLISECONDS.sleep(1);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        c = (DataCommand) clientInputStream.readObject();
+                    }
+                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                    Client.command.setSchedule(null);
+                }
+                if(Client.command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
+                {
+                    clientOutputStream.writeObject(Client.command);
+                    DataCommand c = (DataCommand) clientInputStream.readObject();
+                    while(!c.getValidity())
+                    {
+                        try
+                        {
+                            TimeUnit.MILLISECONDS.sleep(1);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        c = (DataCommand) clientInputStream.readObject();
+                    }
+                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                    Client.command.setSchedule(null);
                 }
             }
         }

@@ -28,4 +28,5 @@ public class Client
     {
         new ClientAuthenticationFrame(portNumber, hostName, parentFrame);
     }
+
 }

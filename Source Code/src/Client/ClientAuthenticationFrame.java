@@ -136,7 +136,7 @@ class ClientAuthenticationFrame extends JFrame
     private void createFrame()
     {
         JFrame clientFrame = new ClientFrame(this.clientManager, parentFrame, user);
-        clientFrame.setTitle("Client@" + hostName + ":" + portNumber);
+        clientFrame.setTitle(user.getUserName() + "@" + hostName + ":" + portNumber);
         clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         clientFrame.setVisible(true);
         clientFrame.setResizable(false);

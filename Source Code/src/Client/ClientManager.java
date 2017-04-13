@@ -46,77 +46,48 @@ class ClientManager extends Thread
             DataMessage message = new DataMessage(userInput);
             clientOutputStream.writeObject(message);
 
-            while(true)
+            while(!interrupted())
             {
-                if(Client.command.getCommandType() == DataCommand.CommandType.CLOSE_SERVER)
+                DataCommand.CommandType ct = Client.command.getCommandType();
+
+                if(ct == DataCommand.CommandType.CLOSE_SERVER)
                 {
+                    clientOutputStream.reset();
                     clientOutputStream.writeObject(Client.command);
-                    DataCommand c = (DataCommand) clientInputStream.readObject();
-                    while(!c.getValidity())
-                    {
-                        try
-                        {
-                            TimeUnit.MILLISECONDS.sleep(1);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        c = (DataCommand) clientInputStream.readObject();
-                    }
+                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                    Client.command.setSchedule(null);
+                    break;
+                }
+                else if(ct == DataCommand.CommandType.INSERT_SCHEDULE)
+                {
+                    clientOutputStream.reset();
+                    clientOutputStream.writeObject(Client.command);
                     Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
                     Client.command.setSchedule(null);
                 }
-                if(Client.command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
+                else if(ct == DataCommand.CommandType.DELETE_SCHEDULE)
                 {
+                    clientOutputStream.reset();
                     clientOutputStream.writeObject(Client.command);
-                    DataCommand c = (DataCommand) clientInputStream.readObject();
-                    while(!c.getValidity())
-                    {
-                        try
-                        {
-                            TimeUnit.MILLISECONDS.sleep(1);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        c = (DataCommand) clientInputStream.readObject();
-                    }
-                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setSchedule(null);
-                }
-                if(Client.command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
-                {
-                    clientOutputStream.writeObject(Client.command);
-                    DataCommand c = (DataCommand) clientInputStream.readObject();
-                    while(!c.getValidity())
-                    {
-                        try
-                        {
-                            TimeUnit.MILLISECONDS.sleep(1);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        c = (DataCommand) clientInputStream.readObject();
-                    }
                     Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
                     Client.command.setSchedule(null);
                 }
             }
+
+            clientInputStream.close();
+            clientOutputStream.close();
+            socket.close();
         }
         catch (UnknownHostException e)
         {
-            System.err.println("Don't know about host " + hostName);
+            System.err.println("Unable to find host " + hostName);
             System.exit(1);
 
         }
         catch (IOException e)
         {
             System.err.println("Couldn't get I/O for the connection to " + hostName);
-            System.exit(1);
+            //System.exit(1);
         }
         catch (ClassNotFoundException e)
         {

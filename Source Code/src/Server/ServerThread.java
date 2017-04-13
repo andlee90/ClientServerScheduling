@@ -87,7 +87,7 @@ public class ServerThread extends Thread
                         break;
                     }
 
-                    if (command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
+                    else if (command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
                     {
                         schedule = command.getSchedule();
                         scheduleId = ServerDB.selectScheduleIdByDayAndTime(
@@ -98,10 +98,9 @@ public class ServerThread extends Thread
                         command.setValidity(true);
                         serverOutputStream.writeObject(command);
                         System.out.println(userAddress + " added " + schedule + " to their schedule");
-
                     }
 
-                    if (command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
+                    else if (command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
                     {
                         schedule = command.getSchedule();
                         scheduleId = ServerDB.selectScheduleIdByDayAndTime(
@@ -116,9 +115,9 @@ public class ServerThread extends Thread
                 }
             }
 
-            //serverInputStream.close();
-            //serverOutputStream.close();
-            //close();
+            serverInputStream.close();
+            serverOutputStream.close();
+            close();
         }
         catch (IOException e)
         {

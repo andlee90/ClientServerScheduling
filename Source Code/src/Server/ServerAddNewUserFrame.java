@@ -110,8 +110,8 @@ class ServerAddNewUserFrame extends JFrame
             {
                 ServerDB.insertUser(usernameField.getText(),
                         passwordField.getText(),
-                        firstNameField.getText(),
-                        lastNameField.getText());
+                        lastNameField.getText(),
+                        firstNameField.getText());
 
                 dispose();
                 parentFrame.setVisible(true);

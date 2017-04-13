@@ -15,6 +15,7 @@ class ServerFrame extends JFrame
     private static final int FRAME_HEIGHT = 375;
 
     private JButton editSchedulesButton;
+    private JButton editUsersButton;
     private JButton closeServerButton;
     private JScrollPane scrollPane;
     private JFrame parentFrame;
@@ -42,6 +43,7 @@ class ServerFrame extends JFrame
 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         buttonPanel.add(editSchedulesButton);
+        buttonPanel.add(editUsersButton);
         buttonPanel.add(closeServerButton);
 
         container.setLayout(new FlowLayout());
@@ -62,10 +64,15 @@ class ServerFrame extends JFrame
 
     private void createButtons()
     {
-        editSchedulesButton = new JButton("Modify Schedules");
+        editSchedulesButton = new JButton("Modify User Schedules");
         editSchedulesButton.setEnabled(true);
         EditSchedulesListener editSchedulesListener = new EditSchedulesListener();
         editSchedulesButton.addActionListener(editSchedulesListener);
+
+        editUsersButton = new JButton("Modify Users");
+        editUsersButton.setEnabled(true);
+        EditUsersListener editUsersListener = new EditUsersListener();
+        editUsersButton.addActionListener(editUsersListener);
 
         closeServerButton = new JButton("Close Server");
         closeServerButton.setEnabled(true);
@@ -82,6 +89,18 @@ class ServerFrame extends JFrame
         {
             setVisible(false); // Hide Server GUI
             new ServerScheduleEditor(frame); // Create new schedule editor
+        }
+    }
+
+    /**
+     * Creates a new user editor object and hides current frame.
+     */
+    class EditUsersListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            setVisible(false); // Hide Server GUI
+            new ServerUserEditor(frame); // Create new user editor
         }
     }
 

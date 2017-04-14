@@ -92,7 +92,7 @@ public class ServerThread extends Thread
                         schedule = command.getSchedule();
                         scheduleId = ServerDB.selectScheduleIdByDayAndTime(
                                 (schedule.substring(0,schedule.indexOf(" "))),
-                                (schedule.substring(schedule.indexOf(" "),schedule.length())));
+                                (schedule.substring(schedule.indexOf(" ")+1,schedule.length())));
 
                         ServerDB.insertUserSchedule(userId, scheduleId);
                         command.setValidity(true);

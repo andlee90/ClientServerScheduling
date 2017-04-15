@@ -1,10 +1,19 @@
 package Server;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Handles creation and management of all server user interface objects.
@@ -16,7 +25,9 @@ class ServerFrame extends JFrame
 
     private JButton editSchedulesButton;
     private JButton editUsersButton;
+    private JButton saveServerLogButton;
     private JButton closeServerButton;
+    private JTextArea textArea;
     private JScrollPane scrollPane;
     private JFrame parentFrame;
     private JFrame frame = this;
@@ -44,6 +55,7 @@ class ServerFrame extends JFrame
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         buttonPanel.add(editSchedulesButton);
         buttonPanel.add(editUsersButton);
+        buttonPanel.add(saveServerLogButton);
         buttonPanel.add(closeServerButton);
 
         container.setLayout(new FlowLayout());
@@ -55,7 +67,7 @@ class ServerFrame extends JFrame
 
     private void createTextArea()
     {
-        JTextArea textArea = new JTextArea(20, 40);
+        textArea = new JTextArea(20, 40);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
         PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
@@ -73,6 +85,11 @@ class ServerFrame extends JFrame
         editUsersButton.setEnabled(true);
         EditUsersListener editUsersListener = new EditUsersListener();
         editUsersButton.addActionListener(editUsersListener);
+
+        saveServerLogButton = new JButton("Save Server Log");
+        saveServerLogButton.setEnabled(true);
+        SaveServerLogListener saveServerLogListener = new SaveServerLogListener();
+        saveServerLogButton.addActionListener(saveServerLogListener);
 
         closeServerButton = new JButton("Close Server");
         closeServerButton.setEnabled(true);
@@ -101,6 +118,43 @@ class ServerFrame extends JFrame
         {
             setVisible(false); // Hide Server GUI
             new ServerUserEditor(frame); // Create new user editor
+        }
+    }
+
+    /**
+     * Creates a new file chooser and outputs a .txt file containing the accumulated server logs to the
+     * selected destination.
+     */
+    class SaveServerLogListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            setEnabled(false);
+
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showSaveDialog(frame);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                ArrayList<String> lines = new ArrayList<>();
+
+                for (String line:textArea.getText().split("\\n"))
+                {
+                    lines.add(line);
+                }
+
+                Path path = file.toPath();
+                try
+                {
+                    Files.write(path, lines, Charset.forName("UTF-8"));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            setEnabled(true);
         }
     }
 

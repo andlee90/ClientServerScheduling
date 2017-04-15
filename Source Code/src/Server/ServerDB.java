@@ -24,26 +24,26 @@ class ServerDB
                 ResultSet tables = dbm.getTables(null, null, "Users", null);
                 if (tables.next())
                 {
-                    System.out.println("Connected to client_scheduler.db");
+                    System.out.println("> Connected to client_scheduler.db");
                 }
                 else
                 {
-                    System.out.println("Created client_scheduler.db");
+                    System.out.println("> Created client_scheduler.db");
 
                     createUsersTable();
-                    System.out.println("Users table created");
+                    System.out.println("> Users table created");
 
                     createSchedulesTable();
-                    System.out.println("Schedules table created");
+                    System.out.println("> Schedules table created");
 
                     createUserSchedTable();
-                    System.out.println("User schedules table created");
+                    System.out.println("> User schedules table created");
 
                     insertSchedules();
-                    System.out.println("Default schedules added");
+                    System.out.println("> User Default schedules added");
 
-                    insertUser("admin", "password", "istrator", "Admin");
-                    System.out.println("Default user admin added");
+                    insertUser("admin", "password", "Guy", "Buddy");
+                    System.out.println("> User Default user admin added");
                 }
             }
 
@@ -143,7 +143,7 @@ class ServerDB
     /**
      * Auto-insert all needed schedules into the schedules table
      */
-    public static void insertSchedules()
+    private static void insertSchedules()
     {
         String sql = "INSERT INTO schedules(schedule_day, schedule_time) VALUES(?,?)";
         String[] daysArray = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
@@ -176,7 +176,7 @@ class ServerDB
      * @param ln last name of the user to be inserted.
      * @param fn first name of the user to be inserted.
      */
-    public static void insertUser(String user, String pass, String ln, String fn)
+    static void insertUser(String user, String pass, String ln, String fn)
     {
         String sql = "INSERT INTO users(user_username,user_password,user_last_name,user_first_name) VALUES(?,?,?,?)";
 
@@ -201,7 +201,7 @@ class ServerDB
      * @param user_id user id of the user schedule to be inserted.
      * @param schedule_id schedule id of the user schedule to be inserted.
      */
-    public static void insertUserSchedule(int user_id, int schedule_id)
+    static void insertUserSchedule(int user_id, int schedule_id)
     {
         String sql = "INSERT INTO user_schedules(user_id,schedule_id) VALUES(?,?)";
 
@@ -575,7 +575,7 @@ class ServerDB
      *
      * @param userId the id of the user to be deleted.
      */
-    public static void deleteUser(int userId)
+    static void deleteUser(int userId)
     {
         String sql = "DELETE FROM users WHERE user_id = ?";
 
@@ -598,7 +598,7 @@ class ServerDB
      * @param user_id user id of the user schedule to be deleted.
      * @param schedule_id schedule id of the user schedule to be deleted.
      */
-    public static void deleteUserSchedule(int user_id, int schedule_id)
+    static void deleteUserSchedule(int user_id, int schedule_id)
     {
         String sql = "DELETE FROM user_schedules WHERE user_id = ? AND schedule_id = ?";
 

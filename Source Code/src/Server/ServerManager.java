@@ -19,7 +19,7 @@ class ServerManager extends Thread
     {
         int portNumber = Integer.parseInt(pn);
         this.MAX_CLIENTS = Integer.parseInt(mc);
-        this.clientConnections = new ServerThread[MAX_CLIENTS];
+        clientConnections = new ServerThread[MAX_CLIENTS];
         this.serverSocket = new ServerSocket(portNumber);
         start();
     }
@@ -28,7 +28,7 @@ class ServerManager extends Thread
     public void run()
     {
         ServerDB.createDB();
-        System.out.println("Total connected clients: 0/" + this.MAX_CLIENTS);
+        System.out.println("> Total connected clients: 0/" + this.MAX_CLIENTS);
 
         Socket socket = null;
 
@@ -65,10 +65,10 @@ class ServerManager extends Thread
     {
         for (int i = 0; i < this.MAX_CLIENTS; i++)
         {
-            if(this.clientConnections[i] == null)
+            if(clientConnections[i] == null)
             {
-                System.out.println("Total connected clients: " + (i + 1) + "/" + this.MAX_CLIENTS);
-                this.clientConnections[i] = new ServerThread(socket, i);
+                System.out.println("> Total connected clients: " + (i + 1) + "/" + this.MAX_CLIENTS);
+                clientConnections[i] = new ServerThread(socket, i);
                 break;
             }
         }

@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -190,6 +192,37 @@ class ClientFrame extends JFrame
         }
     }
 
+    private void updateLists()
+    {
+        userDayList.clear();
+        userTimeList.clear();
+        userDayList.add(0, "Select Day");
+        userTimeList.add(0, "Select Time");
+
+        for (String schedule : Client.currentUserSchedules) {
+            userDayList.add(schedule.substring(0, schedule.indexOf(" ")));
+            userTimeList.add(schedule.substring(schedule.indexOf(" "), schedule.length()));
+        }
+
+        Set<String> daySet = new LinkedHashSet<>(userDayList);
+        String[] dayArr = new String[daySet.size()];
+        dayArr = daySet.toArray(dayArr);
+        DefaultComboBoxModel dayModel = new DefaultComboBoxModel(dayArr);
+        removeDayListBox.removeAllItems();
+        removeDayListBox.setModel(dayModel);
+        removeDayListBox.updateUI();
+        removeDayListBox.setSelectedIndex(0);
+
+        Set<String> timeSet = new LinkedHashSet<>(userTimeList);
+        String[] timeArr = new String[timeSet.size()];
+        timeArr = timeSet.toArray(timeArr);
+        DefaultComboBoxModel timeModel = new DefaultComboBoxModel(timeArr);
+        removeTimeListBox.removeAllItems();
+        removeTimeListBox.setModel(timeModel);
+        removeTimeListBox.updateUI();
+        removeTimeListBox.setSelectedIndex(0);
+    }
+
     /**
      * Listener for the add schedule button. Adds the selected schedule to the selected user's schedule.
      */
@@ -221,6 +254,7 @@ class ClientFrame extends JFrame
                 }
 
                 updateTextArea();
+                updateLists();
                 Client.command.setIsModified(false);
             }
         }
@@ -257,6 +291,7 @@ class ClientFrame extends JFrame
                 }
 
                 updateTextArea();
+                updateLists();
                 Client.command.setIsModified(false);
             }
         }

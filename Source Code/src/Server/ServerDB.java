@@ -384,7 +384,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> DB: No such user found: " + e.getMessage());
         }
 
         return userId;

@@ -67,8 +67,8 @@ class ServerManager extends Thread
         {
             if(clientConnections[i] == null)
             {
-                System.out.println("> Total connected clients: " + (i + 1) + "/" + this.MAX_CLIENTS);
-                clientConnections[i] = new ServerThread(socket, i);
+                //System.out.println("> Total connected clients: " + (i + 1) + "/" + this.MAX_CLIENTS);
+                clientConnections[i] = new ServerThread(socket, i, MAX_CLIENTS);
                 break;
             }
         }

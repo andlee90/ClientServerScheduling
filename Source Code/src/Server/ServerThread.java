@@ -19,13 +19,15 @@ import java.util.ArrayList;
 public class ServerThread extends Thread
 {
     private int threadId;
+    private int MAX_CLIENTS;
     private Socket socket;
     private String userAddress;
 
-    ServerThread(Socket p, int id)
+    ServerThread(Socket p, int id, int m)
     {
         this.socket = p;
         this.threadId = id;
+        this.MAX_CLIENTS = m;
         start();
     }
 
@@ -47,8 +49,8 @@ public class ServerThread extends Thread
             }
             catch(Exception e)
             {
-                System.out.println("> Invalid login attempt from " + socket.getRemoteSocketAddress()
-                        + "\nwith username: " + user.getUserName() + " and password: " + user.getPassword());
+                //System.out.println("> Invalid login attempt from " + socket.getRemoteSocketAddress()
+                //        + "\nwith username: " + user.getUserName() + " and password: " + user.getPassword());
             }
 
             if(userId != 0)
@@ -70,6 +72,7 @@ public class ServerThread extends Thread
 
             if (user.getValidity())
             {
+                System.out.println("> Total connected clients: " + (threadId + 1) + "/" + this.MAX_CLIENTS);
                 DataMessage message = (DataMessage)serverInputStream.readObject();
                 userAddress = message.getMessage();
                 System.out.println("> " + userAddress + " connected");
@@ -128,6 +131,11 @@ public class ServerThread extends Thread
                         System.out.println("> " + userAddress + " removed " + schedule + " from their schedule");
                     }
                 }
+            }
+            else
+            {
+                System.out.println("> Invalid login attempt from " + socket.getRemoteSocketAddress()
+                        + "\n> with username: " + user.getUserName() + " and password: " + user.getPassword());
             }
 
             serverInputStream.close();

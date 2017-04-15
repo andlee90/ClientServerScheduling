@@ -1,6 +1,7 @@
 package DataModels;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Data model for holding a command to be to passed to the server.
@@ -13,14 +14,16 @@ public class DataCommand implements Serializable
     }
 
     private CommandType commandType;
-    private String schedule;
-    private boolean isValid;
+    private String modifiedSchedule;
+    private ArrayList<String> updatedUserSchedules;
+    private boolean isModified;
 
-    public DataCommand(CommandType ct, String s)
+    public DataCommand(CommandType ct, String ms, ArrayList<String> uus)
     {
         this.commandType = ct;
-        this.schedule = s;
-        this.isValid = false;
+        this.modifiedSchedule = ms;
+        this.updatedUserSchedules = uus;
+        this.isModified = false;
     }
 
     public CommandType getCommandType()
@@ -28,28 +31,38 @@ public class DataCommand implements Serializable
         return commandType;
     }
 
-    public String getSchedule()
+    public String getModifiedSchedule()
     {
-        return schedule;
+        return modifiedSchedule;
     }
 
-    public boolean getValidity()
+    public ArrayList<String> getUpdatedUserSchedules()
     {
-        return isValid;
+        return updatedUserSchedules;
     }
 
-    public void setCommandType(CommandType c)
+    public boolean getIsModified()
     {
-        this.commandType = c;
+        return isModified;
     }
 
-    public void setSchedule(String s)
+    public void setCommandType(CommandType ct)
     {
-        this.schedule = s;
+        this.commandType = ct;
     }
 
-    public void setValidity(boolean v)
+    public void setModifiedSchedule(String ms)
     {
-        this.isValid = v;
+        this.modifiedSchedule = ms;
+    }
+
+    public void setUpdatedUserSchedules(ArrayList<String> uus)
+    {
+        this.updatedUserSchedules = uus;
+    }
+
+    public void setIsModified(boolean im)
+    {
+        this.isModified = im;
     }
 }

@@ -74,6 +74,7 @@ public class ServerThread extends Thread
                 userAddress = message.getMessage();
                 System.out.println(userAddress + " connected");
 
+                //TODO: figure out why +1 is needed to insert while +2 is needed for delete and fix
                 while(!interrupted())
                 {
                     String schedule;
@@ -89,26 +90,40 @@ public class ServerThread extends Thread
 
                     else if (command.getCommandType() == DataCommand.CommandType.INSERT_SCHEDULE)
                     {
-                        schedule = command.getSchedule();
+                        schedule = command.getModifiedSchedule();
                         scheduleId = ServerDB.selectScheduleIdByDayAndTime(
                                 (schedule.substring(0,schedule.indexOf(" "))),
                                 (schedule.substring(schedule.indexOf(" ")+1,schedule.length())));
 
                         ServerDB.insertUserSchedule(userId, scheduleId);
-                        command.setValidity(true);
+                        ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
+                        ArrayList<String> schedules = new ArrayList<>();
+                        for (int id:scheduleIds)
+                        {
+                            schedules.add(ServerDB.selectScheduleByScheduleId(id));
+                        }
+                        command.setUpdatedUserSchedules(schedules);
+                        command.setIsModified(true);
                         serverOutputStream.writeObject(command);
                         System.out.println(userAddress + " added " + schedule + " to their schedule");
                     }
 
                     else if (command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
                     {
-                        schedule = command.getSchedule();
+                        schedule = command.getModifiedSchedule();
                         scheduleId = ServerDB.selectScheduleIdByDayAndTime(
                                 (schedule.substring(0,schedule.indexOf(" "))),
-                                (schedule.substring(schedule.indexOf(" "),schedule.length())));
+                                (schedule.substring(schedule.indexOf(" ")+2,schedule.length())));
 
                         ServerDB.deleteUserSchedule(userId, scheduleId);
-                        command.setValidity(true);
+                        ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
+                        ArrayList<String> schedules = new ArrayList<>();
+                        for (int id:scheduleIds)
+                        {
+                            schedules.add(ServerDB.selectScheduleByScheduleId(id));
+                        }
+                        command.setUpdatedUserSchedules(schedules);
+                        command.setIsModified(true);
                         serverOutputStream.writeObject(command);
                         System.out.println(userAddress + " removed " + schedule + " from their schedule");
                     }
@@ -130,7 +145,7 @@ public class ServerThread extends Thread
         }
     }
 
-    public void close() throws IOException
+    void close() throws IOException
     {
         this.socket.close();
     }

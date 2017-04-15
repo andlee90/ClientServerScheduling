@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles creation and management of all client user interface objects.
@@ -52,7 +53,7 @@ class ClientFrame extends JFrame
         createComboBoxes();
         createTextArea();
         createPanels();
-        updateTextArea();
+        //updateTextArea();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
     }
@@ -154,6 +155,11 @@ class ClientFrame extends JFrame
         textArea = new JTextArea(10, 15);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
+
+        for(String schedule:user.getSchedule())
+        {
+            textArea.append(schedule + "\n");
+        }
     }
 
     private void createButtons()
@@ -177,8 +183,8 @@ class ClientFrame extends JFrame
     private void updateTextArea()
     {
         textArea.setText("");
-        Collections.sort(user.getSchedule());
-        for(String schedule:user.getSchedule())
+        Collections.sort(Client.currentUserSchedules);
+        for(String schedule:Client.currentUserSchedules)
         {
             textArea.append(schedule + "\n");
         }
@@ -198,10 +204,24 @@ class ClientFrame extends JFrame
 
             if (!selected_day.equals("Select Day") && !selected_time.equals("Select Time"))
             {
-                Client.command.setSchedule(schedule);
+                Client.command.setModifiedSchedule(schedule);
                 Client.command.setCommandType(DataCommand.CommandType.INSERT_SCHEDULE);
                 user.getSchedule().add(schedule);
+
+                while(!Client.command.getIsModified())
+                {
+                    try
+                    {
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
                 updateTextArea();
+                Client.command.setIsModified(false);
             }
         }
     }
@@ -220,10 +240,24 @@ class ClientFrame extends JFrame
 
             if (!selected_day.equals("Select Day") && !selected_time.equals("Select Time"))
             {
-                Client.command.setSchedule(schedule);
+                Client.command.setModifiedSchedule(schedule);
                 Client.command.setCommandType(DataCommand.CommandType.DELETE_SCHEDULE);
                 user.getSchedule().remove(schedule);
+
+                while(!Client.command.getIsModified())
+                {
+                    try
+                    {
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
                 updateTextArea();
+                Client.command.setIsModified(false);
             }
         }
     }

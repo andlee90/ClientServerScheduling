@@ -3,6 +3,7 @@ package Client;
 import DataModels.DataCommand;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * Handles all client-related activities.
@@ -18,7 +19,8 @@ public class Client
      * to the waiting server. It is "volatile" to allow it's state to be affected and the changes made to be read by
      * multiple threads. No actions occur when it's command type is DEFAULT.
      */
-    volatile static DataCommand command = new DataCommand(DataCommand.CommandType.DEFAULT, null);
+    volatile static DataCommand command = new DataCommand(DataCommand.CommandType.DEFAULT, null, null);
+    volatile static ArrayList<String> currentUserSchedules = new ArrayList<>();
 
     public Client(String pn, String hn, JFrame pf)
     {

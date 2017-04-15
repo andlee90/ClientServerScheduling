@@ -52,22 +52,32 @@ class ClientManager extends Thread
                     clientOutputStream.reset();
                     clientOutputStream.writeObject(Client.command);
                     Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setSchedule(null);
+                    Client.command.setModifiedSchedule(null);
                     break;
                 }
                 else if(ct == DataCommand.CommandType.INSERT_SCHEDULE)
                 {
                     clientOutputStream.reset();
                     clientOutputStream.writeObject(Client.command);
+
+                    Client.command = (DataCommand) clientInputStream.readObject();
+                    Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
+
                     Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setSchedule(null);
+                    Client.command.setUpdatedUserSchedules(null);
+                    Client.command.setModifiedSchedule(null);
                 }
                 else if(ct == DataCommand.CommandType.DELETE_SCHEDULE)
                 {
                     clientOutputStream.reset();
                     clientOutputStream.writeObject(Client.command);
+
+                    Client.command = (DataCommand) clientInputStream.readObject();
+                    Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
+
                     Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setSchedule(null);
+                    Client.command.setUpdatedUserSchedules(null);
+                    Client.command.setModifiedSchedule(null);
                 }
             }
 

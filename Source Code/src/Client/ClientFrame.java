@@ -32,7 +32,7 @@ class ClientFrame extends JFrame
 
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
-    private JButton cancelButton;
+    private JButton closeButton;
 
     private JFrame parentFrame;
     private ClientManager clientManager;
@@ -55,7 +55,6 @@ class ClientFrame extends JFrame
         createComboBoxes();
         createTextArea();
         createPanels();
-        //updateTextArea();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
     }
@@ -143,7 +142,7 @@ class ClientFrame extends JFrame
         scheduleEditPanel.add(new JSeparator());
         scheduleEditPanel.add(scheduleRemovePanel);
         scheduleEditPanel.add(new JSeparator());
-        scheduleEditPanel.add(cancelButton);
+        scheduleEditPanel.add(closeButton);
 
         container.setLayout(new FlowLayout());
         container.add(userSchedulePanel);
@@ -176,10 +175,10 @@ class ClientFrame extends JFrame
         removeScheduleButton.addActionListener(removeScheduleButtonListener);
         removeScheduleButton.setEnabled(true);
 
-        cancelButton = new JButton("Cancel");
-        ActionListener cancelButtonListener = new CancelButtonListener();
-        cancelButton.addActionListener(cancelButtonListener);
-        cancelButton.setEnabled(true);
+        closeButton = new JButton("Close Connection");
+        ActionListener closeButtonListener = new CloseButtonListener();
+        closeButton.addActionListener(closeButtonListener);
+        closeButton.setEnabled(true);
     }
 
     private void updateTextArea()
@@ -311,7 +310,7 @@ class ClientFrame extends JFrame
     /**
      * Listener for the cancel button. Hides the schedule editor GUI
      */
-    class CancelButtonListener implements ActionListener
+    class CloseButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {

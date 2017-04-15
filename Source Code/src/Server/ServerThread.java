@@ -132,6 +132,7 @@ public class ServerThread extends Thread
 
             serverInputStream.close();
             serverOutputStream.close();
+            ServerManager.clientConnections[threadId] = null;
             close();
         }
         catch (IOException e)

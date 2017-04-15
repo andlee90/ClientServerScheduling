@@ -13,7 +13,7 @@ class ServerManager extends Thread
 {
     final private int MAX_CLIENTS;
     final private ServerSocket serverSocket;
-    final private ServerThread[] clientConnections;
+    static ServerThread[] clientConnections;
 
     ServerManager(String pn, String mc) throws IOException
     {

@@ -237,25 +237,36 @@ class ClientFrame extends JFrame
 
             if (!selected_day.equals("Select Day") && !selected_time.equals("Select Time"))
             {
-                Client.command.setModifiedSchedule(schedule);
-                Client.command.setCommandType(DataCommand.CommandType.INSERT_SCHEDULE);
-                user.getSchedule().add(schedule);
-
-                while(!Client.command.getIsModified())
+                boolean exists = false;
+                for (String s:Client.currentUserSchedules)
                 {
-                    try
+                    if (schedule.equals(s))
                     {
-                        TimeUnit.MILLISECONDS.sleep(1);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
+                        exists = true;
                     }
                 }
+                if (!exists)
+                {
+                    Client.command.setModifiedSchedule(schedule);
+                    Client.command.setCommandType(DataCommand.CommandType.INSERT_SCHEDULE);
+                    user.getSchedule().add(schedule);
 
-                updateTextArea();
-                updateLists();
-                Client.command.setIsModified(false);
+                    while(!Client.command.getIsModified())
+                    {
+                        try
+                        {
+                            TimeUnit.MILLISECONDS.sleep(1);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    updateTextArea();
+                    updateLists();
+                    Client.command.setIsModified(false);
+                }
             }
         }
     }

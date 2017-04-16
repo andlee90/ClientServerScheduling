@@ -28,7 +28,7 @@ class ServerManager extends Thread
     public void run()
     {
         ServerDB.createDB();
-        System.out.println("> Total connected clients: 0/" + this.MAX_CLIENTS);
+        System.out.println("> [" + Server.getDate() + "] Total connected clients: 0/" + this.MAX_CLIENTS);
 
         Socket socket = null;
 
@@ -67,7 +67,6 @@ class ServerManager extends Thread
         {
             if(clientConnections[i] == null)
             {
-                //System.out.println("> Total connected clients: " + (i + 1) + "/" + this.MAX_CLIENTS);
                 clientConnections[i] = new ServerThread(socket, i, MAX_CLIENTS);
                 break;
             }

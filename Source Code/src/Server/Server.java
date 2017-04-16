@@ -1,7 +1,5 @@
 package Server;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,7 +10,7 @@ import java.net.UnknownHostException;
  */
 public class Server
 {
-    public static ServerManager serverManager;
+    static ServerManager serverManager;
     private JFrame parentFrame;
 
     private String portNumber;
@@ -36,7 +34,7 @@ public class Server
     {
         JFrame serverFrame = new ServerFrame(parentFrame);
         serverFrame.setTitle("Server@" + hostName + ":" + portNumber);
-        serverFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         serverFrame.setVisible(true);
         serverFrame.setResizable(false);
     }
@@ -68,5 +66,13 @@ public class Server
         }
 
         return hostname;
+    }
+
+    public static String getDate()
+    {
+        java.util.Date date = new java.util.Date();
+        String dateString = date.toString();
+
+        return dateString.substring(4,19);
     }
 }

@@ -41,17 +41,9 @@ public class ServerThread extends Thread
 
             DataUser user = (DataUser)serverInputStream.readObject();
             user.setViewed(true);
-            int userId = 0;
 
-            try
-            {
-                userId = ServerDB.selectUserIdByUsernameAndPassword(user.getUserName(), user.getPassword());
-            }
-            catch(Exception e)
-            {
-                //System.out.println("> Invalid login attempt from " + socket.getRemoteSocketAddress()
-                //        + "\nwith username: " + user.getUserName() + " and password: " + user.getPassword());
-            }
+            int userId = 0;
+            userId = ServerDB.selectUserIdByUsernameAndPassword(user.getUserName(), user.getPassword());
 
             if(userId != 0)
             {
@@ -72,10 +64,12 @@ public class ServerThread extends Thread
 
             if (user.getValidity())
             {
-                System.out.println("> Total connected clients: " + (threadId + 1) + "/" + this.MAX_CLIENTS);
                 DataMessage message = (DataMessage)serverInputStream.readObject();
                 userAddress = message.getMessage();
-                System.out.println("> " + userAddress + " connected");
+
+                System.out.println("> [" + Server.getDate() + "] " + userAddress + " connected");
+                System.out.println("> [" + Server.getDate() + "] Total connected clients: " + (threadId + 1) + "/"
+                        + this.MAX_CLIENTS);
 
                 //TODO: figure out why +1 is needed to insert while +2 is needed for delete and fix
                 while(!interrupted())
@@ -87,7 +81,9 @@ public class ServerThread extends Thread
 
                     if (command.getCommandType() == DataCommand.CommandType.CLOSE_SERVER)
                     {
-                        System.out.println("> " + userAddress + " disconnected");
+                        System.out.println("> [" + Server.getDate() + "] " + userAddress + " disconnected");
+                        System.out.println("> [" + Server.getDate() + "] Total connected clients: " + (threadId) + "/"
+                                + this.MAX_CLIENTS);
                         break;
                     }
 
@@ -108,7 +104,8 @@ public class ServerThread extends Thread
                         command.setUpdatedUserSchedules(schedules);
                         command.setIsModified(true);
                         serverOutputStream.writeObject(command);
-                        System.out.println("> " + userAddress + " added " + schedule + " to their schedule");
+                        System.out.println("> [" + Server.getDate() + "] " + userAddress + " added " + schedule
+                                + " to their schedule");
                     }
 
                     else if (command.getCommandType() == DataCommand.CommandType.DELETE_SCHEDULE)
@@ -128,14 +125,15 @@ public class ServerThread extends Thread
                         command.setUpdatedUserSchedules(schedules);
                         command.setIsModified(true);
                         serverOutputStream.writeObject(command);
-                        System.out.println("> " + userAddress + " removed " + schedule + " from their schedule");
+                        System.out.println("> [" + Server.getDate() + "] " + userAddress + " removed " + schedule + " from their schedule");
                     }
                 }
             }
             else
             {
-                System.out.println("> Invalid login attempt from " + socket.getRemoteSocketAddress()
-                        + "\n> with username: " + user.getUserName() + " and password: " + user.getPassword());
+                System.out.println("> [" + Server.getDate() + "] Invalid login attempt from "
+                        + socket.getRemoteSocketAddress() + "\n> with username: " + user.getUserName()
+                        + " and password: " + user.getPassword());
             }
 
             serverInputStream.close();
@@ -145,7 +143,8 @@ public class ServerThread extends Thread
         }
         catch (IOException e)
         {
-            System.out.println("> " + "Exception caught when trying to listen on port or listening for a connection");
+            System.out.println("> [" + Server.getDate() + "] Exception caught when trying to listen " +
+                    "on port or listening for a connection");
             System.out.println(e.getMessage());
         }
         catch (ClassNotFoundException e)

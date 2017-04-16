@@ -24,26 +24,26 @@ class ServerDB
                 ResultSet tables = dbm.getTables(null, null, "Users", null);
                 if (tables.next())
                 {
-                    System.out.println("> Connected to client_scheduler.db");
+                    System.out.println("> [" + Server.getDate() + "] Connected to client_scheduler.db");
                 }
                 else
                 {
-                    System.out.println("> Created client_scheduler.db");
+                    System.out.println("> [" + Server.getDate() + "] Created client_scheduler.db");
 
                     createUsersTable();
-                    System.out.println("> Users table created");
+                    System.out.println("> [" + Server.getDate() + "] Users table created");
 
                     createSchedulesTable();
-                    System.out.println("> Schedules table created");
+                    System.out.println("> [" + Server.getDate() + "] Schedules table created");
 
                     createUserSchedTable();
-                    System.out.println("> User schedules table created");
+                    System.out.println("> [" + Server.getDate() + "] User schedules table created");
 
                     insertSchedules();
-                    System.out.println("> User Default schedules added");
+                    System.out.println("> [" + Server.getDate() + "] User Default schedules added");
 
                     insertUser("admin", "password", "Guy", "Buddy");
-                    System.out.println("> User Default user admin added");
+                    System.out.println("> [" + Server.getDate() + "] User Default user admin added");
                 }
             }
 

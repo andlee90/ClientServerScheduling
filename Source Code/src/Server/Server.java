@@ -50,7 +50,7 @@ public class Server
     /**
      * Gets the network name of the host machine.
      */
-    private String getHost()
+    static String getHost()
     {
         String hostname = "Unknown";
 
@@ -68,7 +68,7 @@ public class Server
         return hostname;
     }
 
-    public static String getDate()
+    static String getDate()
     {
         java.util.Date date = new java.util.Date();
         String dateString = date.toString();

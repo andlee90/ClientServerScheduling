@@ -152,6 +152,8 @@ class ServerUserEditorFrame extends JFrame
                 int selectedUserId = ServerDB.selectUserIdByUsername(selectedUser);
                 ServerDB.deleteUser(selectedUserId);
                 updateTextAreaAndComboBox();
+                System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " removed user '"
+                        + selectedUser + "'");
             }
         }
     }

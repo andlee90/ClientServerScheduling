@@ -252,6 +252,8 @@ class ServerScheduleEditorFrame extends JFrame
                 {
                     ServerDB.insertUserSchedule(userId, scheduleId);
                     updateTextAreaAndComboBoxes(selected_user);
+                    System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " added '"
+                            + schedule + "' to " + selected_user + "'s schedule");
                 }
             }
         }
@@ -267,6 +269,7 @@ class ServerScheduleEditorFrame extends JFrame
             String selected_user = String.valueOf(usernameListBox.getItemAt(usernameListBox.getSelectedIndex()));
             String selected_day = String.valueOf(removeDayListBox.getItemAt(removeDayListBox.getSelectedIndex()));
             String selected_time = String.valueOf(removeTimeListBox.getItemAt(removeTimeListBox.getSelectedIndex()));
+            String schedule = selected_day + " " + selected_time;
 
             if (!selected_user.equals("Select User") &&
                     !selected_day.equals("Select Day") &&
@@ -277,6 +280,8 @@ class ServerScheduleEditorFrame extends JFrame
 
                 ServerDB.deleteUserSchedule(userId, scheduleId);
                 updateTextAreaAndComboBoxes(selected_user);
+                System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " removed '"
+                        + schedule + "' from " + selected_user + "'s schedule");
             }
         }
     }

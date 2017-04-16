@@ -104,7 +104,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            setEnabled(false); // Hide Server GUI
             new ServerScheduleEditor(frame); // Create new schedule editor
         }
     }
@@ -116,7 +116,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            setEnabled(false); // Hide Server GUI
             new ServerUserEditor(frame); // Create new user editor
         }
     }
@@ -168,7 +168,7 @@ class ServerFrame extends JFrame
         {
             Server.serverManager.interrupt(); // Shutdown server
             dispose(); // Destroy Server GUI
-            parentFrame.setVisible(true); // Show Main GUI
+            parentFrame.setEnabled(true); // Show Main GUI
         }
     }
 }

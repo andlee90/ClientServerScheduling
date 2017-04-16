@@ -109,7 +109,7 @@ class ServerUserEditorFrame extends JFrame
         this.add(container);
     }
 
-    public void updateTextAreaAndComboBox()
+    void updateTextAreaAndComboBox()
     {
         ArrayList<String> usernameList = ServerDB.selectAllUsernames();
         usernameList.add(0, "Select User");
@@ -134,7 +134,7 @@ class ServerUserEditorFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            setEnabled(false); // Hide Server GUI
             new ServerAddNewUser(frame, serverUserEditorFrame); // Create new user editor
         }
     }
@@ -166,7 +166,7 @@ class ServerUserEditorFrame extends JFrame
         public void actionPerformed(ActionEvent event)
         {
             dispose();
-            parentFrame.setVisible(true);
+            parentFrame.setEnabled(true);
         }
     }
 }

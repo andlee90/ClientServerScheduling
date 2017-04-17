@@ -344,13 +344,9 @@ class ClientFrame extends JFrame
             {
                 File file = fc.getSelectedFile();
                 ArrayList<String> lines = new ArrayList<>();
-
-                for (String line:textArea.getText().split("\\n"))
-                {
-                    lines.add(line);
-                }
-
+                Collections.addAll(lines, textArea.getText().split("\\n"));
                 Path path = file.toPath();
+
                 try
                 {
                     Files.write(path, lines, Charset.forName("UTF-8"));

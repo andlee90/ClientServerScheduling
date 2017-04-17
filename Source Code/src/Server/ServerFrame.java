@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Handles creation and management of all server user interface objects.
@@ -140,13 +141,9 @@ class ServerFrame extends JFrame
             {
                 File file = fc.getSelectedFile();
                 ArrayList<String> lines = new ArrayList<>();
-
-                for (String line:textArea.getText().split("\\n"))
-                {
-                    lines.add(line);
-                }
-
+                Collections.addAll(lines, textArea.getText().split("\\n"));
                 Path path = file.toPath();
+                
                 try
                 {
                     Files.write(path, lines, Charset.forName("UTF-8"));

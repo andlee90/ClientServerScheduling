@@ -40,7 +40,7 @@ class ClientFrame extends JFrame
     private JButton saveScheduleButton;
     static JButton closeButton;
 
-    static JFrame frame;
+    private static JFrame frame;
     private JFrame parentFrame;
     private ClientManager clientManager;
     private DataUser user;
@@ -56,7 +56,7 @@ class ClientFrame extends JFrame
         this.clientManager = sm;
         this.parentFrame = p;
         this.user = u;
-        this.frame = this;
+        frame = this;
 
         populateLists();
         createLabels();

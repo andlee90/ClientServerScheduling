@@ -114,7 +114,7 @@ class ServerAddNewUserFrame extends JFrame
                         firstNameField.getText());
 
                 dispose();
-                parentFrame.setVisible(true);
+                parentFrame.setEnabled(true);
                 serverUserEditorFrame.updateTextAreaAndComboBox();
                 System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " added user '"
                         + usernameField.getText());

@@ -143,7 +143,7 @@ class ServerFrame extends JFrame
                 ArrayList<String> lines = new ArrayList<>();
                 Collections.addAll(lines, textArea.getText().split("\\n"));
                 Path path = file.toPath();
-                
+
                 try
                 {
                     Files.write(path, lines, Charset.forName("UTF-8"));
@@ -167,7 +167,7 @@ class ServerFrame extends JFrame
         {
             Server.serverManager.interrupt(); // Shutdown server
             dispose(); // Destroy Server GUI
-            parentFrame.setEnabled(true); // Show Main GUI
+            parentFrame.setVisible(true); // Show Main GUI
         }
     }
 }

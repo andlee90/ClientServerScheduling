@@ -36,7 +36,7 @@ class ServerDB
                     createSchedulesTable();
                     System.out.println("> [" + Server.getDate() + "] Schedules table created");
 
-                    createUserSchedTable();
+                    createUserScheduleTable();
                     System.out.println("> [" + Server.getDate() + "] User schedules table created");
 
                     insertSchedules();
@@ -47,7 +47,8 @@ class ServerDB
                 }
             }
 
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             System.out.println(e.getMessage());
         }
@@ -59,7 +60,7 @@ class ServerDB
     private static void createUsersTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS users (\n"
-                + "user_id INTEGER NOT NULL PRIMARY KEY,\n"
+                + "user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
                 + "user_username TEXT NOT NULL UNIQUE,\n"
                 + "user_password TEXT NOT NULL,\n"
                 + "user_last_name TEXT NOT NULL,\n"
@@ -83,7 +84,7 @@ class ServerDB
     private static void createSchedulesTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS schedules (\n"
-                + "schedule_id INTEGER NOT NULL PRIMARY KEY,\n"
+                + "schedule_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
                 + "schedule_day TEXT NOT NULL,\n"
                 + "schedule_time TEXT NOT NULL\n"
                 + ");";
@@ -102,7 +103,7 @@ class ServerDB
     /**
      * Creates a users-schedules linker table if one does not already exist.
      */
-    private static void createUserSchedTable()
+    private static void createUserScheduleTable()
     {
         String sql = "CREATE TABLE IF NOT EXISTS user_schedules (\n"
                 + "user_schedule_id INTEGER NOT NULL PRIMARY KEY,\n"

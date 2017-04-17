@@ -3,26 +3,24 @@ package Main;
 import javax.swing.*;
 
 /**
- * Created by Tim on 4/16/2017.
+ * Creates a frame to display messages for the purpose of general error handling.
  */
 public class MainErrorMessageFrame
 {
-    JPanel message;
-    JDialog dialog;
-    JFrame frame;
+    private JPanel message;
+    private JFrame frame;
+
     public MainErrorMessageFrame(String error)
     {
-
         frame = new JFrame();
         createPanel(error);
         createDialog();
         JOptionPane.showConfirmDialog(frame, message, "Error Message:", JOptionPane.CANCEL_OPTION);
-
-
     }
+
     private void createDialog()
     {
-        dialog = new JDialog(frame, "Error Message:");
+        JDialog dialog = new JDialog(frame, "Error Message:");
         dialog.setModal(true);
         dialog.setContentPane(message);
         dialog.pack();

@@ -55,6 +55,7 @@ class ServerFrame extends JFrame
         textAreaPanel.add(scrollPane);
 
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+
         buttonPanel.add(editSchedulesButton);
         buttonPanel.add(editUsersButton);
         buttonPanel.add(saveServerLogButton);

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Handles creation and management of all main user interface objects.
@@ -18,8 +19,10 @@ class MainFrame extends JFrame
     private JButton createServerButton;
     private JButton joinServerButton;
 
-    private JTextField cPortField;
-    private JTextField sPortField;
+    private JComboBox cPortField;
+    private JComboBox sPortField;
+
+
     private JTextField maxCliField;
     private JTextField hostField;
 
@@ -35,10 +38,16 @@ class MainFrame extends JFrame
     {
         createButtons();
         createTextFields();
+        createDropdowns();
         createPanel();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setLocationRelativeTo(null);
+    }
+    private void createDropdowns(){
+        Integer[] portArr = {9006,9007,9008,9010};
+        cPortField = new JComboBox(portArr);
+        sPortField = new JComboBox(portArr);
     }
 
     private void createButtons()
@@ -56,8 +65,8 @@ class MainFrame extends JFrame
 
     private void createTextFields()
     {
-        cPortField = new JTextField(4);
-        sPortField = new JTextField(4);
+        //cPortField = new JTextField(4);
+        //sPortField = new JTextField(4);
         maxCliField = new JTextField(4);
         hostField = new JTextField(10);
     }
@@ -127,14 +136,14 @@ class MainFrame extends JFrame
             {
                //sPortField;
               // maxCliField;
-                if (sPortField.getText().equals("")) {
+               /* if (sPortField.getText().equals("")) {
                     throw new IOException("Please enter a valid port number.");
-                }
+                }*/
                 if (maxCliField.getText().equals("")) {
                     throw new IOException("Please enter a maximum number of clients.");
                 }
                 setVisible(false); // Hide Main GUI
-                portNumber = sPortField.getText(); // Get string from text field
+                portNumber = sPortField.getSelectedItem().toString(); // Get string from text field
                 maxClients = maxCliField.getText(); // Get string from text field
                 new Server(portNumber, maxClients, frame); // Create a new server
             }
@@ -159,21 +168,19 @@ class MainFrame extends JFrame
         public void actionPerformed(ActionEvent event)
         {
             try {
-                if (cPortField.getText().equals("")) {
+               /* if (cPortField.getText().equals("")) {
                     throw new IOException("Please enter a valid port number.");
-                }
+                }*/
                 if (hostField.getText().equals("")) {
                     throw new IOException("Please enter a valid Host name");
                 }
 
                 setVisible(false); // Hide Main GUI
-                portNumber = cPortField.getText();
+                portNumber = cPortField.getSelectedItem().toString();
                 hostName = hostField.getText();
                 new Client(portNumber, hostName, frame);
             }
             catch (IOException e) {
-                frame = new MainFrame();
-                frame.setVisible(true);
                 frame.setEnabled((false));
                 new MainErrorMessageFrame(e.getLocalizedMessage());
                 frame.setEnabled((true));

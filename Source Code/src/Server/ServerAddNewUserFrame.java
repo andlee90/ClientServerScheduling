@@ -1,9 +1,12 @@
 package Server;
 
+import Main.MainErrorMessageFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Handles creation and management of all add new user interface objects.
@@ -14,6 +17,7 @@ class ServerAddNewUserFrame extends JFrame
     private static final int FRAME_HEIGHT = 150;
 
     private JFrame parentFrame;
+    private JFrame frame;
     private ServerUserEditorFrame serverUserEditorFrame;
 
     private JTextField usernameField;
@@ -33,6 +37,7 @@ class ServerAddNewUserFrame extends JFrame
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame = this;
     }
 
     private void createTextFields()
@@ -101,13 +106,17 @@ class ServerAddNewUserFrame extends JFrame
      */
     class AddButtonListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent event)
-        {
-            if(usernameField.getText() != null &&
-                    passwordField.getText() != null &&
-                    firstNameField.getText() != null &&
-                    lastNameField.getText() != null)
-            {
+        public void actionPerformed(ActionEvent event) {
+           try
+           {
+               if(usernameField.getText().equals("") ||
+                       passwordField.getText().equals("") ||
+                       firstNameField.getText().equals("") ||
+                       lastNameField.getText().equals(""))
+               {
+                   throw new IOException("Please fill out all required fields");
+
+               }
                 ServerDB.insertUser(usernameField.getText(),
                         passwordField.getText(),
                         lastNameField.getText(),
@@ -118,6 +127,12 @@ class ServerAddNewUserFrame extends JFrame
                 serverUserEditorFrame.updateTextAreaAndComboBox();
                 System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " added user '"
                         + usernameField.getText());
+            }
+            catch(Exception e)
+            {
+                frame.setEnabled(false);
+                new MainErrorMessageFrame(e.getLocalizedMessage());
+                frame.setEnabled(true);
             }
         }
     }

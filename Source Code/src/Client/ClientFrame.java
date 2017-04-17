@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -32,10 +37,12 @@ class ClientFrame extends JFrame
 
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
+    private JButton saveScheduleButton;
     private JButton closeButton;
 
     static JFrame frame;
     private JFrame parentFrame;
+    private JFrame frame;
     private ClientManager clientManager;
     private DataUser user;
 
@@ -50,6 +57,7 @@ class ClientFrame extends JFrame
         this.clientManager = sm;
         this.parentFrame = p;
         this.user = u;
+        this.frame = this;
 
         populateLists();
         createLabels();
@@ -122,6 +130,7 @@ class ClientFrame extends JFrame
         JPanel scheduleEditPanel = new JPanel();
         JPanel scheduleAddPanel = new JPanel();
         JPanel scheduleRemovePanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
 
         userSchedulePanel.setLayout(new BoxLayout(userSchedulePanel, BoxLayout.Y_AXIS));
         userSchedulePanel.add(userLabel);
@@ -139,12 +148,16 @@ class ClientFrame extends JFrame
         scheduleRemovePanel.add(new JLabel(""));
         scheduleRemovePanel.add(removeScheduleButton);
 
+        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.add(saveScheduleButton);
+        buttonPanel.add(closeButton);
+
         scheduleEditPanel.setLayout(new BoxLayout(scheduleEditPanel, BoxLayout.Y_AXIS));
         scheduleEditPanel.add(scheduleAddPanel);
         scheduleEditPanel.add(new JSeparator());
         scheduleEditPanel.add(scheduleRemovePanel);
         scheduleEditPanel.add(new JSeparator());
-        scheduleEditPanel.add(closeButton);
+        scheduleEditPanel.add(buttonPanel);
 
         container.setLayout(new FlowLayout());
         container.add(userSchedulePanel);
@@ -176,6 +189,11 @@ class ClientFrame extends JFrame
         ActionListener removeScheduleButtonListener = new RemoveScheduleButtonListener();
         removeScheduleButton.addActionListener(removeScheduleButtonListener);
         removeScheduleButton.setEnabled(true);
+
+        saveScheduleButton = new JButton("Save Schedule to File");
+        ActionListener saveScheduleButtonListener = new SaveScheduleToFileListener();
+        saveScheduleButton.addActionListener(saveScheduleButtonListener);
+        saveScheduleButton.setEnabled(true);
 
         closeButton = new JButton("Close Connection");
         ActionListener closeButtonListener = new CloseButtonListener();
@@ -306,6 +324,41 @@ class ClientFrame extends JFrame
                 updateLists();
                 Client.command.setIsModified(false);
             }
+        }
+    }
+
+    /**
+     * Creates a new file chooser and outputs a .txt file containing the accumulated server logs to the
+     * selected destination.
+     */
+    class SaveScheduleToFileListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            setEnabled(false);
+
+            final JFileChooser fc = new JFileChooser();
+            String filename = user.getUserName() + "_schedule.txt";
+            fc.setSelectedFile(new File(filename));
+            int returnVal = fc.showSaveDialog(frame);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                ArrayList<String> lines = new ArrayList<>();
+                Collections.addAll(lines, textArea.getText().split("\\n"));
+                Path path = file.toPath();
+
+                try
+                {
+                    Files.write(path, lines, Charset.forName("UTF-8"));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            setEnabled(true);
         }
     }
 

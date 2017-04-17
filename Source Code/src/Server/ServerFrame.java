@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Handles creation and management of all server user interface objects.
@@ -104,7 +105,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            setEnabled(false); // Hide Server GUI
             new ServerScheduleEditor(frame); // Create new schedule editor
         }
     }
@@ -116,7 +117,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Server GUI
+            setEnabled(false); // Hide Server GUI
             new ServerUserEditor(frame); // Create new user editor
         }
     }
@@ -132,19 +133,17 @@ class ServerFrame extends JFrame
             setEnabled(false);
 
             final JFileChooser fc = new JFileChooser();
+            String filename = Server.getHost() + "_server_log.txt";
+            fc.setSelectedFile(new File(filename));
             int returnVal = fc.showSaveDialog(frame);
 
             if (returnVal == JFileChooser.APPROVE_OPTION)
             {
                 File file = fc.getSelectedFile();
                 ArrayList<String> lines = new ArrayList<>();
-
-                for (String line:textArea.getText().split("\\n"))
-                {
-                    lines.add(line);
-                }
-
+                Collections.addAll(lines, textArea.getText().split("\\n"));
                 Path path = file.toPath();
+                
                 try
                 {
                     Files.write(path, lines, Charset.forName("UTF-8"));
@@ -168,7 +167,7 @@ class ServerFrame extends JFrame
         {
             Server.serverManager.interrupt(); // Shutdown server
             dispose(); // Destroy Server GUI
-            parentFrame.setVisible(true); // Show Main GUI
+            parentFrame.setEnabled(true); // Show Main GUI
         }
     }
 }

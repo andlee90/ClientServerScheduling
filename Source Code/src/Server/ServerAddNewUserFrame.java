@@ -145,7 +145,7 @@ class ServerAddNewUserFrame extends JFrame
         public void actionPerformed(ActionEvent event)
         {
             dispose();
-            parentFrame.setVisible(true);
+            parentFrame.setEnabled(true);
         }
     }
 }

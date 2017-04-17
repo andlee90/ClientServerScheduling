@@ -132,6 +132,8 @@ class ServerFrame extends JFrame
             setEnabled(false);
 
             final JFileChooser fc = new JFileChooser();
+            String filename = Server.getHost() + "_server_log.txt";
+            fc.setSelectedFile(new File(filename));
             int returnVal = fc.showSaveDialog(frame);
 
             if (returnVal == JFileChooser.APPROVE_OPTION)

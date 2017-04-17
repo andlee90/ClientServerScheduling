@@ -22,11 +22,11 @@ class ServerScheduleEditorFrame extends JFrame
     private JButton removeScheduleButton;
     private JButton closeButton;
 
-    private JComboBox usernameListBox;
-    private JComboBox addDayListBox;
-    private JComboBox addTimeListBox;
-    private JComboBox removeDayListBox;
-    private JComboBox removeTimeListBox;
+    private JComboBox<String> usernameListBox;
+    private JComboBox<String> addDayListBox;
+    private JComboBox<String> addTimeListBox;
+    private JComboBox<String> removeDayListBox;
+    private JComboBox<String> removeTimeListBox;
 
     private JScrollPane scrollPane;
     private JTextArea textArea;
@@ -71,27 +71,27 @@ class ServerScheduleEditorFrame extends JFrame
         usernameList.add(0, "Select User");
         String[] usernameArr = new String[usernameList.size()];
         usernameArr = usernameList.toArray(usernameArr);
-        usernameListBox = new JComboBox(usernameArr);
+        usernameListBox = new JComboBox<>(usernameArr);
         usernameListBox.setSelectedIndex(0);
         usernameListBox.addActionListener(new UsernameListBoxListener());
 
         selectionDefault = "Select Day";
-        addDayListBox = new JComboBox();
+        addDayListBox = new JComboBox<>();
         addDayListBox.addItem(selectionDefault);
         addDayListBox.setSelectedIndex(0);
 
         selectionDefault = "Select Time";
-        addTimeListBox = new JComboBox();
+        addTimeListBox = new JComboBox<>();
         addTimeListBox.addItem(selectionDefault);
         addTimeListBox.setSelectedIndex(0);
 
         selectionDefault = "Select Day";
-        removeDayListBox = new JComboBox();
+        removeDayListBox = new JComboBox<>();
         removeDayListBox.addItem(selectionDefault);
         removeDayListBox.setSelectedIndex(0);
 
         selectionDefault = "Select Time";
-        removeTimeListBox = new JComboBox();
+        removeTimeListBox = new JComboBox<>();
         removeTimeListBox.addItem(selectionDefault);
         removeTimeListBox.setSelectedIndex(0);
     }
@@ -160,7 +160,7 @@ class ServerScheduleEditorFrame extends JFrame
         addDayList.add(0, "Select Day");
         String[] addDayArr = new String[addDayList.size()];
         addDayList.toArray(addDayArr);
-        DefaultComboBoxModel addDayModel = new DefaultComboBoxModel(addDayArr);
+        DefaultComboBoxModel<String> addDayModel = new DefaultComboBoxModel<>(addDayArr);
         addDayListBox.setModel(addDayModel);
         addDayListBox.updateUI();
 
@@ -169,7 +169,7 @@ class ServerScheduleEditorFrame extends JFrame
         addTimeList.add(0, "Select Time");
         String[] addTimeArr = new String[addTimeList.size()];
         addTimeList.toArray(addTimeArr);
-        DefaultComboBoxModel addTimeModel = new DefaultComboBoxModel(addTimeArr);
+        DefaultComboBoxModel<String> addTimeModel = new DefaultComboBoxModel<>(addTimeArr);
         addTimeListBox.setModel(addTimeModel);
         addTimeListBox.updateUI();
 
@@ -183,7 +183,7 @@ class ServerScheduleEditorFrame extends JFrame
         Set<String> removeDaySet = new LinkedHashSet<>(removeDayList);
         String[] removeDayArr = new String[removeDaySet.size()];
         removeDayArr = removeDaySet.toArray(removeDayArr);
-        DefaultComboBoxModel dayModel = new DefaultComboBoxModel(removeDayArr);
+        DefaultComboBoxModel<String> dayModel = new DefaultComboBoxModel<>(removeDayArr);
         removeDayListBox.setModel( dayModel );
         removeDayListBox.updateUI();
 
@@ -197,7 +197,7 @@ class ServerScheduleEditorFrame extends JFrame
         Set<String> removeTimeSet = new LinkedHashSet<>(removeTimeList);
         String[] removeTimeArr = new String[removeTimeSet.size()];
         removeTimeArr = removeTimeSet.toArray(removeTimeArr);
-        DefaultComboBoxModel timeModel = new DefaultComboBoxModel(removeTimeArr);
+        DefaultComboBoxModel<String> timeModel = new DefaultComboBoxModel<>(removeTimeArr);
         removeTimeListBox.setModel( timeModel );
         removeTimeListBox.updateUI();
     }

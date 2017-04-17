@@ -39,22 +39,19 @@ class ClientFrame extends JFrame
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
     private JButton saveScheduleButton;
-    static JButton closeButton;
+    private static JButton closeButton;
 
     private static JFrame frame;
     private JFrame parentFrame;
-    private ClientManager clientManager;
     private DataUser user;
-
 
     private ArrayList<String> userDayList= new ArrayList<>();
     private ArrayList<String> userTimeList = new ArrayList<>();
     private ArrayList<String> allDayList= new ArrayList<>();
     private ArrayList<String> allTimeList = new ArrayList<>();
 
-    ClientFrame(ClientManager sm, JFrame p, DataUser u)
+    ClientFrame(JFrame p, DataUser u)
     {
-        this.clientManager = sm;
         this.parentFrame = p;
         this.user = u;
         frame = this;
@@ -65,10 +62,9 @@ class ClientFrame extends JFrame
         createComboBoxes();
         createTextArea();
         createPanels();
+
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setLocationRelativeTo(null);
-        frame = this;
-
     }
 
     private void createLabels()
@@ -234,7 +230,7 @@ class ClientFrame extends JFrame
     private void updateTextArea()
     {
         textArea.setText("");
-        Collections.sort(Client.currentUserSchedules);
+        Client.sortSchedules();
         for(String schedule:Client.currentUserSchedules)
         {
             textArea.append(schedule + "\n");
@@ -256,7 +252,7 @@ class ClientFrame extends JFrame
         Set<String> daySet = new LinkedHashSet<>(userDayList);
         String[] dayArr = new String[daySet.size()];
         dayArr = daySet.toArray(dayArr);
-        DefaultComboBoxModel dayModel = new DefaultComboBoxModel(dayArr);
+        DefaultComboBoxModel<String> dayModel = new DefaultComboBoxModel<>(dayArr);
         removeDayListBox.removeAllItems();
         removeDayListBox.setModel(dayModel);
         removeDayListBox.updateUI();
@@ -265,7 +261,7 @@ class ClientFrame extends JFrame
         Set<String> timeSet = new LinkedHashSet<>(userTimeList);
         String[] timeArr = new String[timeSet.size()];
         timeArr = timeSet.toArray(timeArr);
-        DefaultComboBoxModel timeModel = new DefaultComboBoxModel(timeArr);
+        DefaultComboBoxModel<String> timeModel = new DefaultComboBoxModel<>(timeArr);
         removeTimeListBox.removeAllItems();
         removeTimeListBox.setModel(timeModel);
         removeTimeListBox.updateUI();
@@ -322,7 +318,6 @@ class ClientFrame extends JFrame
     /**
      * Listener for the delete schedule button. Removes the selected schedule from the selected user's schedule.
      */
-    //TODO: Update comboboxes so they don't include deleted options
     class RemoveScheduleButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -398,7 +393,6 @@ class ClientFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            //TODO: actually destroy frame.
             Client.command.setCommandType(DataCommand.CommandType.CLOSE_SERVER);
             setVisible(false);
             parentFrame.setVisible(true);

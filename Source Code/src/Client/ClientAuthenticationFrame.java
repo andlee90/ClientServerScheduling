@@ -9,23 +9,21 @@ import java.util.concurrent.TimeUnit;
  */
 class ClientAuthenticationFrame extends JFrame
 {
+    static JButton cancelButton;
+    static JFrame frame;
 
     private JLabel userNameLabel;
     private JLabel passwordLabel;
     private JButton loginButton;
-    static JButton cancelButon;
     private JPanel container;
     private JTextField userField;
     private JPasswordField passwordField;
     private JFrame parentFrame;
-    static JFrame frame;
-    private ClientManager clientManager;
-
-
 
     private String hostName;
     private String portNumber;
     private DataUser user;
+    private ClientManager clientManager;
 
     ClientAuthenticationFrame(String pn, String hn, JFrame pf)
     {
@@ -36,6 +34,7 @@ class ClientAuthenticationFrame extends JFrame
         parentFrame = pf;
         this.hostName = hn;
         this.portNumber = pn;
+        frame = this;
 
         createButtons();
         createLabels();
@@ -49,7 +48,6 @@ class ClientAuthenticationFrame extends JFrame
         actionlogin();
         actionCancel();
         setLocationRelativeTo(null);
-        frame = this;
     }
 
     private void createLabels()
@@ -63,9 +61,9 @@ class ClientAuthenticationFrame extends JFrame
     private void createButtons()
     {
         loginButton = new JButton("Login");
-        cancelButon = new JButton("Cancel");
+        cancelButton = new JButton("Cancel");
         loginButton.setBounds(50,110,80,20);
-        cancelButon.setBounds(150,110,80,20);
+        cancelButton.setBounds(150,110,80,20);
     }
 
     private void createPanel()
@@ -73,7 +71,7 @@ class ClientAuthenticationFrame extends JFrame
         container = new JPanel();
         container.setLayout (null);
         container.add(loginButton);
-        container.add(cancelButon);
+        container.add(cancelButton);
         container.add(userNameLabel);
         container.add(userField);
         container.add(passwordLabel);
@@ -90,7 +88,7 @@ class ClientAuthenticationFrame extends JFrame
 
     private void actionCancel()
     {
-        cancelButon.addActionListener(ae ->
+        cancelButton.addActionListener(ae ->
         {
             setVisible(false);
             parentFrame.setVisible(true);
@@ -121,7 +119,8 @@ class ClientAuthenticationFrame extends JFrame
                     }
                     user = clientManager.getUser();
                 }
-            }catch (Exception e){}
+            }
+            catch (Exception ignored){}
 
             if (user.getValidity())
             {
@@ -131,7 +130,6 @@ class ClientAuthenticationFrame extends JFrame
 
             else if (Client.isValidHost)
             {
-
                 JOptionPane.showMessageDialog(null,"Incorrect Username or Password");
                 userField.setText("");
                 passwordField.setText("");
@@ -145,9 +143,9 @@ class ClientAuthenticationFrame extends JFrame
      */
     private void createFrame()
     {
-        JFrame clientFrame = new ClientFrame(this.clientManager, parentFrame, user);
+        JFrame clientFrame = new ClientFrame(parentFrame, user);
         clientFrame.setTitle(user.getUserName() + "@" + hostName + ":" + portNumber);
-        clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        clientFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         clientFrame.setVisible(true);
         clientFrame.setResizable(false);
     }

@@ -89,7 +89,7 @@ class ClientManager extends Thread
         catch (UnknownHostException e)
         {
             Client.isValidHost=false;
-            ClientAuthenticationFrame.cancelButon.doClick();
+            ClientAuthenticationFrame.cancelButton.doClick();
             ClientAuthenticationFrame.frame.setEnabled((false));
             new MainErrorMessageFrame("Unable to find host " + hostName);
             ClientAuthenticationFrame.frame.setEnabled((true));
@@ -97,14 +97,14 @@ class ClientManager extends Thread
         catch (IOException e)
         {
             Client.isValidHost=false;
-            ClientAuthenticationFrame.cancelButon.doClick();
+            ClientAuthenticationFrame.cancelButton.doClick();
             ClientAuthenticationFrame.frame.setEnabled((false));
             new MainErrorMessageFrame("Couldn't get I/O for the connection to "+ hostName);
             ClientAuthenticationFrame.frame.setEnabled((true));
         }
         catch (ClassNotFoundException e)
         {
-            ClientAuthenticationFrame.cancelButon.doClick();
+            ClientAuthenticationFrame.cancelButton.doClick();
             ClientAuthenticationFrame.frame.setEnabled((false));
             new MainErrorMessageFrame("Class not found.");
             ClientAuthenticationFrame.frame.setEnabled((true));

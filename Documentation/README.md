@@ -1,8 +1,8 @@
 # ClientServerScheduling
-CPSC445 class project
-Andrew Smith & Timothy Kelly
+CPSC445 Class Project  
+by Andrew Smith and Timothy Kelly
 
-# To Build Project In Eclipse
+## To Build Project In Eclipse
 * Clone repository.
 * Unzip project files.
 * Open Eclipse and create a new Java project. 
@@ -26,7 +26,7 @@ Andrew Smith & Timothy Kelly
 * File -> Save
 * Navigate to Main.java, right click -> Run as -> Java Application
 
-# To Create a Useable .jar In Eclipse
+## To Create a Useable .jar In Eclipse
 * File -> Export -> Java -> Runnable JAR
 * Launch Configuration must be Main - Client Server Scheduling
 * Set Export Destination to appropriate directory and name to 'ClientSeverScheduling.jar'

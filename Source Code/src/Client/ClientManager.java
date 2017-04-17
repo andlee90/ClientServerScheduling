@@ -3,6 +3,7 @@ package Client;
 import DataModels.DataCommand;
 import DataModels.DataMessage;
 import DataModels.DataUser;
+import Main.MainErrorMessageFrame;
 
 import java.io.*;
 import java.net.*;
@@ -87,18 +88,21 @@ class ClientManager extends Thread
         }
         catch (UnknownHostException e)
         {
-            System.err.println("Unable to find host " + hostName);
-            System.exit(1);
-
+            ClientAuthenticationFrame.frame.setEnabled((false));
+            new MainErrorMessageFrame("Unable to find host " + hostName);
+            ClientAuthenticationFrame.frame.setEnabled((true));
         }
         catch (IOException e)
         {
-            System.err.println("Couldn't get I/O for the connection to " + hostName);
-            //System.exit(1);
+            //ClientAuthenticationFrame.frame.setEnabled((false));
+            //new MainErrorMessageFrame("Couldn't get I/O for the connection to "+ hostName);
+            //ClientAuthenticationFrame.frame.setEnabled((true));
         }
         catch (ClassNotFoundException e)
         {
-            e.printStackTrace();
+            ClientAuthenticationFrame.frame.setEnabled((false));
+            new MainErrorMessageFrame("Class not found.");
+            ClientAuthenticationFrame.frame.setEnabled((true));
         }
     }
 

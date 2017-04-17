@@ -17,7 +17,10 @@ class ClientAuthenticationFrame extends JFrame
     private JTextField userField;
     private JPasswordField passwordField;
     private JFrame parentFrame;
+    static JFrame frame;
     private ClientManager clientManager;
+
+
 
     private String hostName;
     private String portNumber;
@@ -44,6 +47,7 @@ class ClientAuthenticationFrame extends JFrame
 
         actionlogin();
         actionCancel();
+        frame = this;
     }
 
     private void createLabels()

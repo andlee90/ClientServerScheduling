@@ -38,11 +38,10 @@ class ClientFrame extends JFrame
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
     private JButton saveScheduleButton;
-    private JButton closeButton;
+    static JButton closeButton;
 
     static JFrame frame;
     private JFrame parentFrame;
-    private JFrame frame;
     private ClientManager clientManager;
     private DataUser user;
 
@@ -66,7 +65,9 @@ class ClientFrame extends JFrame
         createTextArea();
         createPanels();
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
         frame = this;
+
     }
 
     private void createLabels()

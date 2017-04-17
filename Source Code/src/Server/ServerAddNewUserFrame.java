@@ -37,6 +37,7 @@ class ServerAddNewUserFrame extends JFrame
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
         frame = this;
     }
 

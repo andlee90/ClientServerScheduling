@@ -42,6 +42,7 @@ class ServerScheduleEditorFrame extends JFrame
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
     }
 
     private void createButtons()

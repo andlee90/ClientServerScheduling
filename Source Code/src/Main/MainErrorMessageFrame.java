@@ -1,12 +1,7 @@
 package Main;
 
-import Server.Server;
-import Client.Client;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+
 /**
  * Created by Tim on 4/16/2017.
  */

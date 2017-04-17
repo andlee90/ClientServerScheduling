@@ -21,7 +21,7 @@ public class Client
      */
     volatile static DataCommand command = new DataCommand(DataCommand.CommandType.DEFAULT, null, null);
     volatile static ArrayList<String> currentUserSchedules = new ArrayList<>();
-
+    volatile static boolean isValidHost = true;
     public Client(String pn, String hn, JFrame pf)
     {
         this.parentFrame = pf;

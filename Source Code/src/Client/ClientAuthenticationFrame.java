@@ -9,10 +9,11 @@ import java.util.concurrent.TimeUnit;
  */
 class ClientAuthenticationFrame extends JFrame
 {
+
     private JLabel userNameLabel;
     private JLabel passwordLabel;
     private JButton loginButton;
-    private JButton cancelButon;
+    static JButton cancelButon;
     private JPanel container;
     private JTextField userField;
     private JPasswordField passwordField;
@@ -47,6 +48,7 @@ class ClientAuthenticationFrame extends JFrame
 
         actionlogin();
         actionCancel();
+        setLocationRelativeTo(null);
         frame = this;
     }
 
@@ -102,21 +104,22 @@ class ClientAuthenticationFrame extends JFrame
             String puname = userField.getText();
             String ppaswd = passwordField.getText();
             user = new DataUser(puname, ppaswd, null, null, null);
+            try {
+                this.clientManager = new ClientManager(portNumber, hostName, user);
 
-            this.clientManager = new ClientManager(portNumber, hostName, user);
-
-            while(!user.getViewed())
-            {
-                try
+                while(!user.getViewed() && Client.isValidHost)
                 {
-                    TimeUnit.MILLISECONDS.sleep(1);
+                    try
+                    {
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    user = clientManager.getUser();
                 }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                user = clientManager.getUser();
-            }
+            }catch (Exception e){}
 
             if (user.getValidity())
             {
@@ -124,8 +127,9 @@ class ClientAuthenticationFrame extends JFrame
                 createFrame();
             }
 
-            else
+            else if (Client.isValidHost)
             {
+
                 JOptionPane.showMessageDialog(null,"Incorrect Username or Password");
                 userField.setText("");
                 passwordField.setText("");

@@ -37,6 +37,7 @@ class ServerUserEditorFrame extends JFrame
         updateTextAreaAndComboBox();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
     }
 
     private void createButtons()

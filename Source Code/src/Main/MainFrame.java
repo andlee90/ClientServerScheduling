@@ -38,6 +38,7 @@ class MainFrame extends JFrame
         createPanel();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
     }
 
     private void createButtons()

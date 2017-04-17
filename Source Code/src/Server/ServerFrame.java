@@ -42,6 +42,7 @@ class ServerFrame extends JFrame
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
     }
 
     private void createPanels()

@@ -12,16 +12,18 @@ public class DataUser implements Serializable
     private String password;
     private String firstName;
     private String lastName;
+    private boolean isAdmin;
     private ArrayList<String> schedule;
     private boolean isViewed;
     private boolean isValid;
 
-    public DataUser(String un, String p, String fn, String ln, ArrayList<String> s)
+    public DataUser(String un, String p, String fn, String ln, boolean ia, ArrayList<String> s)
     {
         this.userName = un;
         this.password = p;
         this.firstName = fn;
         this.lastName = ln;
+        this.isAdmin = ia;
         this.schedule = s;
         this.isViewed = false;
         this.isValid = false;
@@ -45,6 +47,11 @@ public class DataUser implements Serializable
     public String getLastName()
     {
         return this.lastName;
+    }
+
+    public boolean getIsAdmin()
+    {
+        return isAdmin;
     }
 
     public ArrayList<String> getSchedule()
@@ -80,6 +87,11 @@ public class DataUser implements Serializable
     public void setLastName(String ln)
     {
         this.lastName = ln;
+    }
+
+    public void setIsAdmin(boolean ia)
+    {
+        this.isAdmin = ia;
     }
 
     public void setSchedule(ArrayList<String> s)

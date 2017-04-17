@@ -104,24 +104,36 @@ class ClientFrame extends JFrame
         dayArr = allDayList.toArray(dayArr);
         addDayListBox = new JComboBox<>(dayArr);
         addDayListBox.setSelectedIndex(0);
+        addDayListBox.setEnabled(false);
 
         allTimeList.add(0, "Select Time");
         String[] timeArr = new String[allTimeList.size()];
         timeArr = allTimeList.toArray(timeArr);
         addTimeListBox = new JComboBox<>(timeArr);
         addTimeListBox.setSelectedIndex(0);
+        addTimeListBox.setEnabled(false);
 
         userDayList.add(0, "Select Day");
         dayArr = new String[userDayList.size()];
         dayArr = userDayList.toArray(dayArr);
         removeDayListBox = new JComboBox<>(dayArr);
         removeDayListBox.setSelectedIndex(0);
+        removeDayListBox.setEnabled(false);
 
         userTimeList.add(0, "Select Time");
         timeArr = new String[userTimeList.size()];
         timeArr = userTimeList.toArray(timeArr);
         removeTimeListBox = new JComboBox<>(timeArr);
         removeTimeListBox.setSelectedIndex(0);
+        removeTimeListBox.setEnabled(false);
+
+        if (user.getIsAdmin())
+        {
+            addDayListBox.setEnabled(true);
+            addTimeListBox.setEnabled(true);
+            removeDayListBox.setEnabled(true);
+            removeTimeListBox.setEnabled(true);
+        }
     }
 
     private void createPanels()
@@ -184,12 +196,12 @@ class ClientFrame extends JFrame
         addScheduleButton = new JButton("Add Schedule");
         ActionListener addScheduleButtonListener = new AddScheduleButtonListener();
         addScheduleButton.addActionListener(addScheduleButtonListener);
-        addScheduleButton.setEnabled(true);
+        addScheduleButton.setEnabled(false);
 
         removeScheduleButton = new JButton("Remove Schedule");
         ActionListener removeScheduleButtonListener = new RemoveScheduleButtonListener();
         removeScheduleButton.addActionListener(removeScheduleButtonListener);
-        removeScheduleButton.setEnabled(true);
+        removeScheduleButton.setEnabled(false);
 
         saveScheduleButton = new JButton("Save Schedule to File");
         ActionListener saveScheduleButtonListener = new SaveScheduleToFileListener();
@@ -200,6 +212,12 @@ class ClientFrame extends JFrame
         ActionListener closeButtonListener = new CloseButtonListener();
         closeButton.addActionListener(closeButtonListener);
         closeButton.setEnabled(true);
+
+        if (user.getIsAdmin())
+        {
+            addScheduleButton.setEnabled(true);
+            removeScheduleButton.setEnabled(true);
+        }
     }
 
     private void updateTextArea()
@@ -246,7 +264,6 @@ class ClientFrame extends JFrame
     /**
      * Listener for the add schedule button. Adds the selected schedule to the selected user's schedule.
      */
-    //TODO: Don't allow adding duplicates
     class AddScheduleButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)

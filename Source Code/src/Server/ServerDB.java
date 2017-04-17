@@ -42,11 +42,10 @@ class ServerDB
                     insertSchedules();
                     System.out.println("> [" + Server.getDate() + "] User Default schedules added");
 
-                    insertUser("admin", "password", "Guy", "Buddy");
+                    insertUser("admin", "password", "Guy", "Buddy", 1);
                     System.out.println("> [" + Server.getDate() + "] User Default user admin added");
                 }
             }
-
         }
         catch (SQLException e)
         {
@@ -64,7 +63,8 @@ class ServerDB
                 + "user_username TEXT NOT NULL UNIQUE,\n"
                 + "user_password TEXT NOT NULL,\n"
                 + "user_last_name TEXT NOT NULL,\n"
-                + "user_first_name INTEGER NOT NULL\n"
+                + "user_first_name TEXT NOT NULL,\n"
+                + "user_is_admin INTEGER NOT NULL\n"
                 + ");";
 
         try (Connection conn = DriverManager.getConnection(dbUrl);
@@ -177,9 +177,9 @@ class ServerDB
      * @param ln last name of the user to be inserted.
      * @param fn first name of the user to be inserted.
      */
-    static void insertUser(String user, String pass, String ln, String fn)
+    static void insertUser(String user, String pass, String ln, String fn, int ia)
     {
-        String sql = "INSERT INTO users(user_username,user_password,user_last_name,user_first_name) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users(user_username,user_password,user_last_name,user_first_name,user_is_admin) VALUES(?,?,?,?,?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
@@ -188,6 +188,7 @@ class ServerDB
             pstmt.setString(2, pass);
             pstmt.setString(3, ln);
             pstmt.setString(4, fn);
+            pstmt.setInt(5, ia);
             pstmt.executeUpdate();
         }
         catch (SQLException e)
@@ -442,6 +443,31 @@ class ServerDB
     }
 
     /**
+     * Returns an last name for the corresponding user id from the users table.
+     *
+     * @param userId the user id of the user to select.
+     */
+    static int selectIsAdminByUserId(int userId)
+    {
+        String sql = "SELECT user_is_admin FROM users WHERE user_id = ?";
+        int ia = 0;
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1,userId);
+            ResultSet rs    = pstmt.executeQuery();
+
+            ia = rs.getInt("user_is_admin");
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return ia;
+    }
+
+    /**
      * Returns a schedule id for the corresponding day and time from the users table.
      *
      * @param day the day of the schedule to select.
@@ -544,31 +570,6 @@ class ServerDB
         }
 
         return times;
-    }
-
-    /**
-     * Returns an arraylist of all user ids from the users table.
-     */
-    public static ArrayList<Integer> selectAllUserIds()
-    {
-        String sql = "SELECT user_id FROM users";
-        ArrayList<Integer> userIds = new ArrayList<>();
-
-        try (Connection conn = connect();
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql))
-        {
-            while (rs.next())
-            {
-                userIds.add(rs.getInt("user_id"));
-            }
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        return userIds;
     }
 
     /**

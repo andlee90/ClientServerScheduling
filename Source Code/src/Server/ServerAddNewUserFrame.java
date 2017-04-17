@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Handles creation and management of all add new user interface objects.
@@ -14,7 +15,7 @@ import java.io.IOException;
 class ServerAddNewUserFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 400;
-    private static final int FRAME_HEIGHT = 150;
+    private static final int FRAME_HEIGHT = 200;
 
     private JFrame parentFrame;
     private JFrame frame;
@@ -25,6 +26,8 @@ class ServerAddNewUserFrame extends JFrame
     private JTextField lastNameField;
     private JTextField firstNameField;
 
+    private JComboBox<String> isAdminListBox;
+
     private JButton addButton;
     private JButton cancelButton;
 
@@ -34,6 +37,7 @@ class ServerAddNewUserFrame extends JFrame
         this.serverUserEditorFrame = suef;
         createTextFields();
         createButtons();
+        createComboBox();
         createPanels();
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -62,6 +66,18 @@ class ServerAddNewUserFrame extends JFrame
         cancelButton.setEnabled(true);
     }
 
+    private void createComboBox()
+    {
+        ArrayList<String> optionList = new ArrayList<>();
+        optionList.add(0, "Select");
+        optionList.add(1, "Yes");
+        optionList.add(2, "No");
+        String[] optionArr = new String[optionList.size()];
+        optionArr = optionList.toArray(optionArr);
+        isAdminListBox = new JComboBox<>(optionArr);
+        isAdminListBox.setSelectedIndex(0);
+    }
+
     private void createPanels()
     {
         JPanel container = new JPanel();
@@ -69,6 +85,7 @@ class ServerAddNewUserFrame extends JFrame
         JPanel passwordPanel = new JPanel();
         JPanel lastNamePanel = new JPanel();
         JPanel firstNamePanel = new JPanel();
+        JPanel isAdminPanel = new JPanel();
         JPanel buttonPanel = new JPanel();
 
         userNamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -87,15 +104,21 @@ class ServerAddNewUserFrame extends JFrame
         firstNamePanel.add(new JLabel("First Name: "));
         firstNamePanel.add(firstNameField);
 
+        isAdminPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        isAdminPanel.add(new JLabel("Administrator?"));
+        isAdminPanel.add(isAdminListBox);
+
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(addButton);
         buttonPanel.add(cancelButton);
 
-        container.setLayout(new GridLayout(3,2));
+        container.setLayout(new GridLayout(4,2));
         container.add(userNamePanel);
         container.add(passwordPanel);
         container.add(firstNamePanel);
         container.add(lastNamePanel);
+        container.add(isAdminPanel);
+        container.add(new JLabel(""));
         container.add(new JLabel(""));
         container.add(buttonPanel);
 
@@ -107,27 +130,34 @@ class ServerAddNewUserFrame extends JFrame
      */
     class AddButtonListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent event) {
+        public void actionPerformed(ActionEvent event)
+        {
            try
            {
-               if(usernameField.getText().equals("") ||
-                       passwordField.getText().equals("") ||
-                       firstNameField.getText().equals("") ||
-                       lastNameField.getText().equals(""))
+               if(usernameField.getText().equals("") || passwordField.getText().equals("") ||
+                       firstNameField.getText().equals("") || lastNameField.getText().equals("") ||
+                       String.valueOf(isAdminListBox.getItemAt(isAdminListBox.getSelectedIndex())).equals("Select"))
                {
                    throw new IOException("Please fill out all required fields");
-
                }
-                ServerDB.insertUser(usernameField.getText(),
-                        passwordField.getText(),
-                        lastNameField.getText(),
-                        firstNameField.getText());
+
+               int isAdmin = 0;
+               if (String.valueOf(isAdminListBox.getItemAt(isAdminListBox.getSelectedIndex())) == "Yes")
+               {
+                   isAdmin = 1;
+               }
+
+               ServerDB.insertUser(usernameField.getText(),
+                       passwordField.getText(),
+                       lastNameField.getText(),
+                       firstNameField.getText(),
+                       isAdmin);
 
                 dispose();
                 parentFrame.setEnabled(true);
                 serverUserEditorFrame.updateTextAreaAndComboBox();
                 System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " added user '"
-                        + usernameField.getText());
+                        + usernameField.getText() + "'");
             }
             catch(Exception e)
             {

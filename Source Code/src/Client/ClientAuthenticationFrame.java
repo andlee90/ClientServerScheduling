@@ -103,8 +103,10 @@ class ClientAuthenticationFrame extends JFrame
         {
             String puname = userField.getText();
             String ppaswd = passwordField.getText();
-            user = new DataUser(puname, ppaswd, null, null, null);
-            try {
+
+            user = new DataUser(puname, ppaswd, null, null, false, null);
+            try
+            {
                 this.clientManager = new ClientManager(portNumber, hostName, user);
 
                 while(!user.getViewed() && Client.isValidHost)

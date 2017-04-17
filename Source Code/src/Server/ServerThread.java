@@ -49,6 +49,10 @@ public class ServerThread extends Thread
             {
                 user.setFirstName(ServerDB.selectFirstNameByUserId(userId));
                 user.setLastName(ServerDB.selectLastNameByUserId(userId));
+                if (ServerDB.selectIsAdminByUserId(userId) == 1)
+                {
+                    user.setIsAdmin(true);
+                }
 
                 ArrayList<Integer> scheduleIds = ServerDB.selectAllScheduleIdsByUserId(userId);
                 ArrayList<String> schedules = new ArrayList<>();

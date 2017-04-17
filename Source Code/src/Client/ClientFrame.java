@@ -34,9 +34,11 @@ class ClientFrame extends JFrame
     private JButton removeScheduleButton;
     private JButton closeButton;
 
+    static JFrame frame;
     private JFrame parentFrame;
     private ClientManager clientManager;
     private DataUser user;
+
 
     private ArrayList<String> userDayList= new ArrayList<>();
     private ArrayList<String> userTimeList = new ArrayList<>();
@@ -55,8 +57,8 @@ class ClientFrame extends JFrame
         createComboBoxes();
         createTextArea();
         createPanels();
-
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame = this;
     }
 
     private void createLabels()

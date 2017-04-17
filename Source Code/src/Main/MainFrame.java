@@ -122,18 +122,31 @@ class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Main GUI
-            portNumber = sPortField.getText(); // Get string from text field
-            maxClients = maxCliField.getText(); // Get string from text field
-
             try
             {
+               //sPortField;
+              // maxCliField;
+                if (sPortField.getText().equals("")) {
+                    throw new IOException("Please enter a valid port number.");
+                }
+                if (maxCliField.getText().equals("")) {
+                    throw new IOException("Please enter a maximum number of clients.");
+                }
+                setVisible(false); // Hide Main GUI
+                portNumber = sPortField.getText(); // Get string from text field
+                maxClients = maxCliField.getText(); // Get string from text field
                 new Server(portNumber, maxClients, frame); // Create a new server
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                new MainErrorMessageFrame(e.getLocalizedMessage());
+                frame = new MainFrame();
+                frame.setTitle("Client/Server Scheduling");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+                frame.setResizable(false);
             }
+
         }
     }
 
@@ -144,10 +157,27 @@ class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setVisible(false); // Hide Main GUI
-            portNumber = cPortField.getText();
-            hostName = hostField.getText();
-            new Client(portNumber, hostName, frame);
+            try {
+                if (cPortField.getText().equals("")) {
+                    throw new IOException("Please enter a valid port number.");
+                }
+                if (hostField.getText().equals("")) {
+                    throw new IOException("Please enter a valid Host name");
+                }
+
+                setVisible(false); // Hide Main GUI
+                portNumber = cPortField.getText();
+                hostName = hostField.getText();
+                new Client(portNumber, hostName, frame);
+            }
+            catch (IOException e) {
+                frame = new MainFrame();
+                frame.setVisible(true);
+                frame.setEnabled((false));
+                new MainErrorMessageFrame(e.getLocalizedMessage());
+                frame.setEnabled((true));
+                frame.toFront();
+            }
         }
     }
 }

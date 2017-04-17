@@ -34,6 +34,7 @@ class ClientFrame extends JFrame
     private JScrollPane scrollPane;
     private JTextArea textArea;
     private JLabel userLabel;
+    private JLabel adminLabel;
 
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
@@ -74,6 +75,15 @@ class ClientFrame extends JFrame
     {
         userLabel = new JLabel(user.getLastName()
                 + ", " + user.getFirstName());
+
+        if (user.getIsAdmin())
+        {
+            adminLabel = new JLabel("ADMIN USER");
+        }
+        else
+        {
+            adminLabel = new JLabel("NON-ADMIN USER");
+        }
     }
 
     private void populateLists()
@@ -147,6 +157,7 @@ class ClientFrame extends JFrame
 
         userSchedulePanel.setLayout(new BoxLayout(userSchedulePanel, BoxLayout.Y_AXIS));
         userSchedulePanel.add(userLabel);
+        userSchedulePanel.add(adminLabel);
         userSchedulePanel.add(scrollPane);
 
         scheduleAddPanel.setLayout(new GridLayout(2,2));

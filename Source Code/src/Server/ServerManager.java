@@ -13,13 +13,13 @@ class ServerManager extends Thread
 {
     final private int MAX_CLIENTS;
     final private ServerSocket serverSocket;
-    static ServerThread[] clientConnections;
+    static ServerThreadManager[] clientConnections;
 
     ServerManager(String pn, String mc) throws IOException
     {
         int portNumber = Integer.parseInt(pn);
         this.MAX_CLIENTS = Integer.parseInt(mc);
-        clientConnections = new ServerThread[MAX_CLIENTS];
+        clientConnections = new ServerThreadManager[MAX_CLIENTS];
         this.serverSocket = new ServerSocket(portNumber);
         start();
     }
@@ -46,7 +46,7 @@ class ServerManager extends Thread
         }
         try
         {
-            for(ServerThread st:clientConnections)
+            for(ServerThreadManager st:clientConnections)
             {
                 st.close();
                 st.interrupt();
@@ -67,7 +67,7 @@ class ServerManager extends Thread
         {
             if(clientConnections[i] == null)
             {
-                clientConnections[i] = new ServerThread(socket, i, MAX_CLIENTS);
+                clientConnections[i] = new ServerThreadManager(socket, i, MAX_CLIENTS);
                 break;
             }
         }

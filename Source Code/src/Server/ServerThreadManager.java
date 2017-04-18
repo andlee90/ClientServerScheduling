@@ -16,14 +16,14 @@ import java.util.ArrayList;
  * closed if authentication fails. Otherwise, communication with the
  * client continues.
  */
-public class ServerThread extends Thread
+public class ServerThreadManager extends Thread
 {
     private int threadId;
     private int MAX_CLIENTS;
     private Socket socket;
     private String userAddress;
 
-    ServerThread(Socket p, int id, int m)
+    ServerThreadManager(Socket p, int id, int m)
     {
         this.socket = p;
         this.threadId = id;

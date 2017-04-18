@@ -134,12 +134,8 @@ class MainFrame extends JFrame
         {
             try
             {
-               //sPortField;
-              // maxCliField;
-               /* if (sPortField.getText().equals("")) {
-                    throw new IOException("Please enter a valid port number.");
-                }*/
-                if (maxCliField.getText().equals("")) {
+                if (maxCliField.getText().equals(""))
+                {
                     throw new IOException("Please enter a maximum number of clients.");
                 }
                 setVisible(false); // Hide Main GUI
@@ -167,11 +163,10 @@ class MainFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            try {
-               /* if (cPortField.getText().equals("")) {
-                    throw new IOException("Please enter a valid port number.");
-                }*/
-                if (hostField.getText().equals("")) {
+            try
+            {
+                if (hostField.getText().equals(""))
+                {
                     throw new IOException("Please enter a valid Host name");
                 }
 
@@ -180,7 +175,8 @@ class MainFrame extends JFrame
                 hostName = hostField.getText();
                 new Client(portNumber, hostName, frame);
             }
-            catch (IOException e) {
+            catch (IOException e)
+            {
                 frame.setEnabled((false));
                 new MainErrorMessageFrame(e.getLocalizedMessage());
                 frame.setEnabled((true));

@@ -40,45 +40,48 @@ class ClientManager extends Thread
             clientOutputStream.writeObject(user);
             user = (DataUser) clientInputStream.readObject();
 
-            String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress();
-            DataMessage message = new DataMessage(userInput);
-            clientOutputStream.writeObject(message);
-
-            while(!interrupted())
+            if(user.getValidity())
             {
-                DataCommand.CommandType ct = Client.command.getCommandType();
+                String userInput = user.getUserName() + "@" + Inet4Address.getLocalHost().getHostAddress();
+                DataMessage message = new DataMessage(userInput);
+                clientOutputStream.writeObject(message);
 
-                if(ct == DataCommand.CommandType.CLOSE_SERVER)
+                while(!interrupted())
                 {
-                    clientOutputStream.reset();
-                    clientOutputStream.writeObject(Client.command);
-                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setModifiedSchedule(null);
-                    break;
-                }
-                else if(ct == DataCommand.CommandType.INSERT_SCHEDULE)
-                {
-                    clientOutputStream.reset();
-                    clientOutputStream.writeObject(Client.command);
+                    DataCommand.CommandType ct = Client.command.getCommandType();
 
-                    Client.command = (DataCommand) clientInputStream.readObject();
-                    Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
+                    if(ct == DataCommand.CommandType.CLOSE_SERVER)
+                    {
+                        clientOutputStream.reset();
+                        clientOutputStream.writeObject(Client.command);
+                        Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                        Client.command.setModifiedSchedule(null);
+                        break;
+                    }
+                    else if(ct == DataCommand.CommandType.INSERT_SCHEDULE)
+                    {
+                        clientOutputStream.reset();
+                        clientOutputStream.writeObject(Client.command);
 
-                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setUpdatedUserSchedules(null);
-                    Client.command.setModifiedSchedule(null);
-                }
-                else if(ct == DataCommand.CommandType.DELETE_SCHEDULE)
-                {
-                    clientOutputStream.reset();
-                    clientOutputStream.writeObject(Client.command);
+                        Client.command = (DataCommand) clientInputStream.readObject();
+                        Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
 
-                    Client.command = (DataCommand) clientInputStream.readObject();
-                    Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
+                        Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                        Client.command.setUpdatedUserSchedules(null);
+                        Client.command.setModifiedSchedule(null);
+                    }
+                    else if(ct == DataCommand.CommandType.DELETE_SCHEDULE)
+                    {
+                        clientOutputStream.reset();
+                        clientOutputStream.writeObject(Client.command);
 
-                    Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
-                    Client.command.setUpdatedUserSchedules(null);
-                    Client.command.setModifiedSchedule(null);
+                        Client.command = (DataCommand) clientInputStream.readObject();
+                        Client.currentUserSchedules = Client.command.getUpdatedUserSchedules();
+
+                        Client.command.setCommandType(DataCommand.CommandType.DEFAULT);
+                        Client.command.setUpdatedUserSchedules(null);
+                        Client.command.setModifiedSchedule(null);
+                    }
                 }
             }
 

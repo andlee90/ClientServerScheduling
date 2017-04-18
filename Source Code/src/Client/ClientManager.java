@@ -37,7 +37,7 @@ class ClientManager extends Thread
             ObjectOutputStream clientOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream clientInputStream = new ObjectInputStream(socket.getInputStream());
 
-            clientOutputStream.writeObject(user);
+            clientOutputStream.writeObject(user); // Send user to server
             user = (DataUser) clientInputStream.readObject();
 
             if(user.getValidity())

@@ -84,6 +84,7 @@ class ClientFrame extends JFrame
 
     private void populateLists()
     {
+        //TODO: Populate these values by requesting them from the server
         allDayList.add("Monday");
         allDayList.add("Tuesday");
         allDayList.add("Wednesday");

@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class DataMessage implements Serializable
 {
-    private String message;
+    private String message; // message to pass to client or server
 
     public DataMessage(String m)
     {

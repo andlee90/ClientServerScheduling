@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Data model for holding info about a user including their associated schedule.
+ * Data model for holding info about a user including their username, password, first and last names, admin status and
+ * associated schedule.
  */
 public class DataUser implements Serializable
 {
@@ -14,8 +15,8 @@ public class DataUser implements Serializable
     private String lastName;
     private boolean isAdmin;
     private ArrayList<String> schedule;
-    private boolean isViewed;
-    private boolean isValid;
+    private boolean isViewed; // true if object has been viewed by server
+    private boolean isValid; // true if username and password have been validated (found in db)
 
     public DataUser(String un, String p, String fn, String ln, boolean ia, ArrayList<String> s)
     {
@@ -67,16 +68,6 @@ public class DataUser implements Serializable
     public boolean getValidity()
     {
         return this.isValid;
-    }
-
-    public void setUserName(String un)
-    {
-        this.userName = un;
-    }
-
-    public void setPassword(String p)
-    {
-        this.password = p;
     }
 
     public void setFirstName(String fn)

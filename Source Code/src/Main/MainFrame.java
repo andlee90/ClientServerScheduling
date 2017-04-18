@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Handles creation and management of all main user interface objects.
@@ -15,24 +14,17 @@ import java.util.ArrayList;
 class MainFrame extends JFrame
 {
     private JFrame frame = this;
-
     private JButton createServerButton;
     private JButton joinServerButton;
-
-    private JComboBox cPortField;
-    private JComboBox sPortField;
-
-
+    private JComboBox<Integer> cPortField;
+    private JComboBox<Integer> sPortField;
     private JTextField maxCliField;
     private JTextField hostField;
 
     private String portNumber;
-    private String hostName;
-    private String maxClients;
 
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 200;
-
 
     MainFrame()
     {
@@ -44,10 +36,12 @@ class MainFrame extends JFrame
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setLocationRelativeTo(null);
     }
-    private void createDropdowns(){
-        Integer[] portArr = {9006,9007,9008,9010};
-        cPortField = new JComboBox(portArr);
-        sPortField = new JComboBox(portArr);
+
+    private void createDropdowns()
+    {
+        Integer[] portArr = {9006,9007,9008,9010}; // Set the application port numbers here
+        cPortField = new JComboBox<>(portArr);
+        sPortField = new JComboBox<>(portArr);
     }
 
     private void createButtons()
@@ -65,8 +59,6 @@ class MainFrame extends JFrame
 
     private void createTextFields()
     {
-        //cPortField = new JTextField(4);
-        //sPortField = new JTextField(4);
         maxCliField = new JTextField(4);
         hostField = new JTextField(10);
     }
@@ -126,7 +118,7 @@ class MainFrame extends JFrame
     }
 
     /**
-     * Creates a new Sever object and hides the main user interface.
+     * Creates a new Sever object and hides the main user interface if all input is valid.
      */
     class CreateServerListener implements ActionListener
     {
@@ -138,9 +130,10 @@ class MainFrame extends JFrame
                 {
                     throw new IOException("Please enter a maximum number of clients.");
                 }
+
                 setVisible(false); // Hide Main GUI
                 portNumber = sPortField.getSelectedItem().toString(); // Get string from text field
-                maxClients = maxCliField.getText(); // Get string from text field
+                String maxClients = maxCliField.getText(); // Get string from text field
                 new Server(portNumber, maxClients, frame); // Create a new server
             }
             catch (IOException e)
@@ -148,16 +141,15 @@ class MainFrame extends JFrame
                 new MainErrorMessageFrame(e.getLocalizedMessage());
                 frame = new MainFrame();
                 frame.setTitle("Client/Server Scheduling");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 frame.setVisible(true);
                 frame.setResizable(false);
             }
-
         }
     }
 
     /**
-     * Creates a new Client object and hides the main user interface.
+     * Creates a new Client object and hides the main user interface if all input is valid.
      */
     class JoinServerListener implements ActionListener
     {
@@ -171,9 +163,9 @@ class MainFrame extends JFrame
                 }
 
                 setVisible(false); // Hide Main GUI
-                portNumber = cPortField.getSelectedItem().toString();
-                hostName = hostField.getText();
-                new Client(portNumber, hostName, frame);
+                portNumber = cPortField.getSelectedItem().toString(); // Get string from text field
+                String hostName = hostField.getText(); // Get string from text field
+                new Client(portNumber, hostName, frame); // Create a new client
             }
             catch (IOException e)
             {

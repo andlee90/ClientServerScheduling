@@ -8,6 +8,10 @@ import java.util.ArrayList;
  */
 class ServerDB
 {
+    /**
+     *  Location of database/to create database if it doesn't exist. JARs EXECUTE FROM COMMON PARENT DIRECTORY OF
+     *  /db/client_scheduler.db
+     */
     private static String dbUrl = "jdbc:sqlite:sqlite/db/client_scheduler.db";
 
     /**
@@ -49,7 +53,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -74,7 +78,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -96,7 +100,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -120,7 +124,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -136,7 +140,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
         return conn;
     }
@@ -163,7 +167,7 @@ class ServerDB
                 }
                 catch (SQLException e)
                 {
-                    System.out.println(e.getMessage());
+                    System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
                 }
             }
         }
@@ -176,10 +180,12 @@ class ServerDB
      * @param pass password of the user to be inserted.
      * @param ln last name of the user to be inserted.
      * @param fn first name of the user to be inserted.
+     * @param ia admin status of the user to be inserted.
      */
     static void insertUser(String user, String pass, String ln, String fn, int ia)
     {
-        String sql = "INSERT INTO users(user_username,user_password,user_last_name,user_first_name,user_is_admin) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO users(user_username,user_password,user_last_name," +
+                "user_first_name,user_is_admin) VALUES(?,?,?,?,?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
@@ -193,7 +199,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -216,16 +222,16 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
     /**
      * Returns a schedule from the schedules table with the corresponding id.
      *
-     * @param schedId the id of the schedule to select
+     * @param scheduleId the id of the schedule to select
      */
-    static String selectScheduleByScheduleId(int schedId)
+    static String selectScheduleByScheduleId(int scheduleId)
     {
         String sql = "SELECT schedule_day, schedule_time FROM schedules WHERE schedule_id = ?";
         String schedule = "";
@@ -233,7 +239,7 @@ class ServerDB
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
         {
-            pstmt.setInt(1,schedId);
+            pstmt.setInt(1,scheduleId);
             ResultSet rs    = pstmt.executeQuery();
 
             while (rs.next())
@@ -244,7 +250,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return schedule;
@@ -253,9 +259,9 @@ class ServerDB
     /**
      * Returns a day from the schedules table with the corresponding id.
      *
-     * @param schedId the id of the schedule to select
+     * @param scheduleId the id of the schedule to select
      */
-    static String selectDayByScheduleId(int schedId)
+    static String selectDayByScheduleId(int scheduleId)
     {
         String sql = "SELECT schedule_day FROM schedules WHERE schedule_id = ?";
         String schedule = "";
@@ -263,7 +269,7 @@ class ServerDB
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
         {
-            pstmt.setInt(1,schedId);
+            pstmt.setInt(1,scheduleId);
             ResultSet rs    = pstmt.executeQuery();
 
             while (rs.next())
@@ -273,7 +279,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return schedule;
@@ -282,9 +288,9 @@ class ServerDB
     /**
      * Returns a time from the schedules table with the corresponding id.
      *
-     * @param schedId the id of the schedule to select
+     * @param scheduleId the id of the schedule to select
      */
-    static String selectTimeByScheduleId(int schedId)
+    static String selectTimeByScheduleId(int scheduleId)
     {
         String sql = "SELECT schedule_time FROM schedules WHERE schedule_id = ?";
         String schedule = "";
@@ -292,7 +298,7 @@ class ServerDB
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql))
         {
-            pstmt.setInt(1,schedId);
+            pstmt.setInt(1,scheduleId);
             ResultSet rs    = pstmt.executeQuery();
 
             while (rs.next())
@@ -302,7 +308,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return schedule;
@@ -331,7 +337,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return scheduleIds;
@@ -359,7 +365,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return userId;
@@ -386,7 +392,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println("> DB: No such user found: " + e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] DB: No such user found: " + e.getMessage());
         }
 
         return userId;
@@ -411,7 +417,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return fn;
@@ -436,7 +442,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return ln;
@@ -461,7 +467,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return ia;
@@ -491,7 +497,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return scheduleId;
@@ -516,7 +522,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return usernames;
@@ -541,7 +547,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return days;
@@ -566,7 +572,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
 
         return times;
@@ -590,7 +596,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 
@@ -613,7 +619,7 @@ class ServerDB
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + e.getMessage());
         }
     }
 }

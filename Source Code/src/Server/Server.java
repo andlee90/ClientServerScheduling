@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 public class Server
 {
     static ServerManager serverManager;
+
     private JFrame parentFrame;
 
     private String portNumber;
@@ -68,6 +69,9 @@ public class Server
         return hostname;
     }
 
+    /**
+     * Gets the current date and time.
+     */
     static String getDate()
     {
         java.util.Date date = new java.util.Date();

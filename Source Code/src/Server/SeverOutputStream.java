@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Writes all output to the assigned text area.
+ */
 public class SeverOutputStream extends OutputStream
 {
     private JTextArea textArea;

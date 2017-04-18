@@ -7,7 +7,7 @@ import java.net.Socket;
 /**
  * Creates a server on a new thread and listens for incoming client connections.
  * For each new client up to MAX_CLIENTS, a new thread is created for management
- * of that thread.
+ * of that clients requests.
  */
 class ServerManager extends Thread
 {
@@ -21,13 +21,13 @@ class ServerManager extends Thread
         this.MAX_CLIENTS = Integer.parseInt(mc);
         clientConnections = new ServerThreadManager[MAX_CLIENTS];
         this.serverSocket = new ServerSocket(portNumber);
-        start();
+        start(); // Start on a new thread
     }
 
     @Override
     public void run()
     {
-        ServerDB.createDB();
+        ServerDB.createDB(); // Create a new database if one does not already exist
         System.out.println("> [" + Server.getDate() + "] Total connected clients: 0/" + this.MAX_CLIENTS);
 
         Socket socket = null;
@@ -48,8 +48,8 @@ class ServerManager extends Thread
         {
             for(ServerThreadManager st:clientConnections)
             {
-                st.close();
-                st.interrupt();
+                st.close(); // Close all child connections if this server is interrupted
+                st.interrupt(); // Interrupt all child threads if this thread is interrupted
             }
             // TODO: Address already in use (Bind failed) when restarting server on same port.
             serverSocket.setReuseAddress(true);
@@ -61,6 +61,9 @@ class ServerManager extends Thread
         }
     }
 
+    /**
+     * Assigns each new client connection to it's own manager until MAX_CLIENTS is reached
+     */
     private void assignClientToThread(Socket socket)
     {
         for (int i = 0; i < this.MAX_CLIENTS; i++)

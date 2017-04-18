@@ -17,17 +17,14 @@ class ServerScheduleEditorFrame extends JFrame
     private static final int FRAME_HEIGHT = 250;
 
     private JFrame parentFrame;
-
     private JButton addScheduleButton;
     private JButton removeScheduleButton;
     private JButton closeButton;
-
     private JComboBox<String> usernameListBox;
     private JComboBox<String> addDayListBox;
     private JComboBox<String> addTimeListBox;
     private JComboBox<String> removeDayListBox;
     private JComboBox<String> removeTimeListBox;
-
     private JScrollPane scrollPane;
     private JTextArea textArea;
 
@@ -142,6 +139,9 @@ class ServerScheduleEditorFrame extends JFrame
         this.add(container);
     }
 
+    /**
+     * Updates components with most recent values.
+     */
     private void updateTextAreaAndComboBoxes(String su)
     {
         currentUserSchedule = new ArrayList<>();
@@ -294,8 +294,8 @@ class ServerScheduleEditorFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            dispose();
-            parentFrame.setEnabled(true);
+            dispose(); // Destroy current frame
+            parentFrame.setEnabled(true); // Enable Server frame
         }
     }
 }

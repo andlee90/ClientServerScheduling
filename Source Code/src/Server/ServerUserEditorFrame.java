@@ -16,16 +16,14 @@ class ServerUserEditorFrame extends JFrame
 
     private JFrame parentFrame;
     private JFrame frame = this;
-    private ServerUserEditorFrame serverUserEditorFrame = this;
-
     private JButton addUserButton;
     private JButton removeUserButton;
     private JButton closeButton;
-
-    private JComboBox removeUserListBox;
-
+    private JComboBox<String> removeUserListBox;
     private JScrollPane scrollPane;
     private JTextArea textArea;
+
+    private ServerUserEditorFrame serverUserEditorFrame = this;
 
     ServerUserEditorFrame(JFrame pf)
     {
@@ -64,7 +62,7 @@ class ServerUserEditorFrame extends JFrame
         usernameList.add(0, "Select User");
         String[] usernameArr = new String[usernameList.size()];
         usernameArr = usernameList.toArray(usernameArr);
-        removeUserListBox = new JComboBox(usernameArr);
+        removeUserListBox = new JComboBox<>(usernameArr);
         removeUserListBox.setSelectedIndex(0);
     }
 
@@ -110,13 +108,17 @@ class ServerUserEditorFrame extends JFrame
         this.add(container);
     }
 
+
+    /**
+     * Updates components with most recent values.
+     */
     void updateTextAreaAndComboBox()
     {
         ArrayList<String> usernameList = ServerDB.selectAllUsernames();
         usernameList.add(0, "Select User");
         String[] usernameArr = new String[usernameList.size()];
         usernameList.toArray(usernameArr);
-        DefaultComboBoxModel usernameModel = new DefaultComboBoxModel(usernameArr);
+        DefaultComboBoxModel<String> usernameModel = new DefaultComboBoxModel<>(usernameArr);
         removeUserListBox.setModel(usernameModel);
         removeUserListBox.updateUI();
 
@@ -151,7 +153,7 @@ class ServerUserEditorFrame extends JFrame
             if(!selectedUser.equals("Select User"))
             {
                 int selectedUserId = ServerDB.selectUserIdByUsername(selectedUser);
-                ServerDB.deleteUser(selectedUserId);
+                ServerDB.deleteUser(selectedUserId); // Remove user
                 updateTextAreaAndComboBox();
                 System.out.println("> [" + Server.getDate() + "] Server@" + Server.getHost() + " removed user '"
                         + selectedUser + "'");

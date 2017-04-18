@@ -1,7 +1,6 @@
 package Server;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,9 +10,7 @@ import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -45,36 +42,13 @@ class ServerFrame extends JFrame
         setLocationRelativeTo(null);
     }
 
-    private void createPanels()
-    {
-        JPanel container = new JPanel();
-        JPanel textAreaPanel = new JPanel();
-        JPanel buttonPanel = new JPanel();
-
-        textAreaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        textAreaPanel.add(scrollPane);
-
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
-
-        buttonPanel.add(editSchedulesButton);
-        buttonPanel.add(editUsersButton);
-        buttonPanel.add(saveServerLogButton);
-        buttonPanel.add(closeServerButton);
-
-        container.setLayout(new FlowLayout());
-        container.add(textAreaPanel);
-        container.add(buttonPanel);
-
-        this.add(container);
-    }
-
     private void createTextArea()
     {
         textArea = new JTextArea(20, 40);
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
         PrintStream printStream = new PrintStream(new SeverOutputStream(textArea));
-        System.setOut(printStream);
+        System.setOut(printStream); // Direct all server package system.out.print calls to text area
     }
 
     private void createButtons()
@@ -100,6 +74,29 @@ class ServerFrame extends JFrame
         closeServerButton.addActionListener(closeServerListener);
     }
 
+    private void createPanels()
+    {
+        JPanel container = new JPanel();
+        JPanel textAreaPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
+
+        textAreaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        textAreaPanel.add(scrollPane);
+
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+
+        buttonPanel.add(editSchedulesButton);
+        buttonPanel.add(editUsersButton);
+        buttonPanel.add(saveServerLogButton);
+        buttonPanel.add(closeServerButton);
+
+        container.setLayout(new FlowLayout());
+        container.add(textAreaPanel);
+        container.add(buttonPanel);
+
+        this.add(container);
+    }
+
     /**
      * Creates a new schedule editor object and hides current frame.
      */
@@ -107,7 +104,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setEnabled(false); // Hide Server GUI
+            setEnabled(false); // Disable Server GUI
             new ServerScheduleEditor(frame); // Create new schedule editor
         }
     }
@@ -119,7 +116,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setEnabled(false); // Hide Server GUI
+            setEnabled(false); // Disable Server GUI
             new ServerUserEditor(frame); // Create new user editor
         }
     }
@@ -132,7 +129,7 @@ class ServerFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            setEnabled(false);
+            setEnabled(false); // Disable Server GUI
 
             final JFileChooser fc = new JFileChooser();
             String filename = Server.getHost() + "_server_log.txt";
@@ -162,7 +159,6 @@ class ServerFrame extends JFrame
     /**
      * Destroys the current frame, stops the server and shows the main user interface.
      */
-    //TODO: Actually close down server
     class CloseServerListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)

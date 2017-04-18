@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * Handles all user adding activities.
  */
-public class ServerAddNewUser
+class ServerAddNewUser
 {
     private JFrame parentFrame;
     private ServerUserEditorFrame serverUserEditorFrame;
@@ -24,7 +24,7 @@ public class ServerAddNewUser
     {
         JFrame serverAddUserFrame = new ServerAddNewUserFrame(parentFrame, serverUserEditorFrame);
         serverAddUserFrame.setTitle("Add New User");
-        serverAddUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverAddUserFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         serverAddUserFrame.setVisible(true);
         serverAddUserFrame.setResizable(false);
     }

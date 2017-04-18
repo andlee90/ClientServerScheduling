@@ -22,7 +22,7 @@ class ServerScheduleEditor
     {
         JFrame serverScheduleEditorFrame = new ServerScheduleEditorFrame(parentFrame);
         serverScheduleEditorFrame.setTitle("Schedule Editor");
-        serverScheduleEditorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverScheduleEditorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         serverScheduleEditorFrame.setVisible(true);
         serverScheduleEditorFrame.setResizable(false);
     }

@@ -22,7 +22,7 @@ class ServerUserEditor
     {
         JFrame serverUserEditorFrame = new ServerUserEditorFrame(parentFrame);
         serverUserEditorFrame.setTitle("User Editor");
-        serverUserEditorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        serverUserEditorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         serverUserEditorFrame.setVisible(true);
         serverUserEditorFrame.setResizable(false);
     }

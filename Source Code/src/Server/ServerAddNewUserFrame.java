@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Handles creation and management of all add new user interface objects.
@@ -20,14 +21,11 @@ class ServerAddNewUserFrame extends JFrame
     private JFrame parentFrame;
     private JFrame frame;
     private ServerUserEditorFrame serverUserEditorFrame;
-
     private JTextField usernameField;
     private JTextField passwordField;
     private JTextField lastNameField;
     private JTextField firstNameField;
-
     private JComboBox<String> isAdminListBox;
-
     private JButton addButton;
     private JButton cancelButton;
 
@@ -142,16 +140,13 @@ class ServerAddNewUserFrame extends JFrame
                }
 
                int isAdmin = 0;
-               if (String.valueOf(isAdminListBox.getItemAt(isAdminListBox.getSelectedIndex())) == "Yes")
+               if (Objects.equals(String.valueOf(isAdminListBox.getItemAt(isAdminListBox.getSelectedIndex())), "Yes"))
                {
                    isAdmin = 1;
                }
 
-               ServerDB.insertUser(usernameField.getText(),
-                       passwordField.getText(),
-                       lastNameField.getText(),
-                       firstNameField.getText(),
-                       isAdmin);
+               ServerDB.insertUser(usernameField.getText(), passwordField.getText(), lastNameField.getText(),
+                       firstNameField.getText(), isAdmin); // Insert new user
 
                 dispose();
                 parentFrame.setEnabled(true);
@@ -175,8 +170,8 @@ class ServerAddNewUserFrame extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            dispose();
-            parentFrame.setEnabled(true);
+            dispose(); // Destroy current frame
+            parentFrame.setEnabled(true); // Enable Server frame
         }
     }
 }

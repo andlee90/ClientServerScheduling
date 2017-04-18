@@ -21,6 +21,7 @@ public class ServerThreadManager extends Thread
     private int threadId;
     private int MAX_CLIENTS;
     private Socket socket;
+    private String userAddress;
 
     ServerThreadManager(Socket p, int id, int m)
     {
@@ -68,7 +69,7 @@ public class ServerThreadManager extends Thread
             if (user.getValidity()) // If user was valid
             {
                 DataMessage message = (DataMessage)serverInputStream.readObject(); // Get message from client
-                String userAddress = message.getMessage();
+                userAddress = message.getMessage();
 
                 System.out.println("> [" + Server.getDate() + "] " + userAddress + " connected");
                 System.out.println("> [" + Server.getDate() + "] Total connected clients: " + (threadId + 1) + "/"
@@ -147,9 +148,12 @@ public class ServerThreadManager extends Thread
         }
         catch (IOException e)
         {
+            ServerManager.clientConnections[threadId] = null; // Clear slot for another client
             System.out.println("> [" + Server.getDate() + "] Exception caught when trying to listen " +
                     "on port or listening for a connection");
-            System.out.println(e.getMessage());
+            System.out.println("> [" + Server.getDate() + "] " + userAddress + " disconnected");
+            System.out.println("> [" + Server.getDate() + "] Total connected clients: " + (threadId) + "/"
+                    + this.MAX_CLIENTS);
         }
         catch (ClassNotFoundException e)
         {

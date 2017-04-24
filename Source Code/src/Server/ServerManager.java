@@ -66,9 +66,14 @@ class ServerManager extends Thread
      */
     private void assignClientToThread(Socket socket)
     {
-        for (int i = 0; i < this.MAX_CLIENTS; i++)
+        for (int i = 0; i <= this.MAX_CLIENTS; i++)
         {
-            if(clientConnections[i] == null)
+            if(i == this.MAX_CLIENTS)
+            {
+                System.out.println("> [" + Server.getDate() + "] WARNING: Maximum client connections reached");
+                break;
+            }
+            else if(clientConnections[i] == null)
             {
                 clientConnections[i] = new ServerThreadManager(socket, i, MAX_CLIENTS);
                 break;

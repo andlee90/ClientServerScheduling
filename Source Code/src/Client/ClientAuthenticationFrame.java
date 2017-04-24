@@ -1,5 +1,6 @@
 package Client;
 import DataModels.DataUser;
+import Main.MainErrorMessageFrame;
 
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
@@ -107,17 +108,24 @@ class ClientAuthenticationFrame extends JFrame
             {
                 this.clientManager = new ClientManager(portNumber, hostName, user);
 
+                int time = 0;
                 while(!user.getViewed() && Client.isValidHost)
                 {
                     try
                     {
                         TimeUnit.MILLISECONDS.sleep(1);
+                        time++;
                     }
                     catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
                     user = clientManager.getUser();
+                    if (time > 5000)
+                    {
+                        new MainErrorMessageFrame("Connection timed out. Server may be full.");
+                        break;
+                    }
                 }
             }
             catch (Exception ignored){}

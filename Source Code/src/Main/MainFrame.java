@@ -103,7 +103,6 @@ class MainFrame extends JFrame
         clientButtonPanel.setLayout(new FlowLayout());
         clientButtonPanel.add(joinServerButton);
         clientButtonPanel.setBorder(BorderFactory.createMatteBorder(0, 1,0,0, Color.GRAY));
-
         container.setLayout(new GridLayout(rows, cols));
         container.add(serverPortFieldPanel);
         container.add(clientPortFieldPanel);

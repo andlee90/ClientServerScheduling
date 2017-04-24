@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 class ClientFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 600;
-    private static final int FRAME_HEIGHT = 250;
+    private static final int FRAME_HEIGHT = 275;
 
     private JComboBox<String> addDayListBox;
     private JComboBox<String> addTimeListBox;
@@ -154,18 +154,20 @@ class ClientFrame extends JFrame
 
         userSchedulePanel.setLayout(new BoxLayout(userSchedulePanel, BoxLayout.Y_AXIS));
         userSchedulePanel.add(userLabel);
-        userSchedulePanel.add(adminLabel);
+        userSchedulePanel.add(adminLabel);;
         userSchedulePanel.add(scrollPane);
 
         scheduleAddPanel.setLayout(new GridLayout(2,2));
         scheduleAddPanel.add(addDayListBox);
         scheduleAddPanel.add(addTimeListBox);
         scheduleAddPanel.add(new JLabel(""));
+        addScheduleButton.add(Box.createVerticalStrut(15));
         scheduleAddPanel.add(addScheduleButton);
 
         scheduleRemovePanel.setLayout(new GridLayout(2,2));
         scheduleRemovePanel.add(removeDayListBox);
         scheduleRemovePanel.add(removeTimeListBox);
+        removeScheduleButton.add(Box.createVerticalStrut(15));
         scheduleRemovePanel.add(new JLabel(""));
         scheduleRemovePanel.add(removeScheduleButton);
 
@@ -175,13 +177,19 @@ class ClientFrame extends JFrame
 
         scheduleEditPanel.setLayout(new BoxLayout(scheduleEditPanel, BoxLayout.Y_AXIS));
         scheduleEditPanel.add(scheduleAddPanel);
+        scheduleEditPanel.add(Box.createVerticalStrut(15));
         scheduleEditPanel.add(new JSeparator());
+        scheduleEditPanel.add(Box.createVerticalStrut(15));
         scheduleEditPanel.add(scheduleRemovePanel);
+        scheduleEditPanel.add(Box.createVerticalStrut(15));
         scheduleEditPanel.add(new JSeparator());
+        scheduleEditPanel.add(Box.createVerticalStrut(5));
         scheduleEditPanel.add(buttonPanel);
+        container.add(Box.createVerticalStrut(225));
 
         container.setLayout(new FlowLayout());
         container.add(userSchedulePanel);
+        container.add(new JLabel("           "));
         container.add(scheduleEditPanel);
 
         this.add(container);

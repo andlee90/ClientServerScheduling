@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 class ServerUserEditorFrame extends JFrame
 {
-    private static final int FRAME_WIDTH = 400;
+    private static final int FRAME_WIDTH = 425;
     private static final int FRAME_HEIGHT = 200;
 
     private JFrame parentFrame;

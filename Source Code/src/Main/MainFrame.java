@@ -138,11 +138,6 @@ class MainFrame extends JFrame
             catch (IOException e)
             {
                 new MainErrorMessageFrame(e.getLocalizedMessage());
-                frame = new MainFrame();
-                frame.setTitle("Client/Server Scheduling");
-                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                frame.setVisible(true);
-                frame.setResizable(false);
             }
         }
     }
